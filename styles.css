@@ -196,3 +196,33 @@ body{ overflow:hidden; }
 }
 
 .hint{ display:none; }
+
+@media (max-width: 768px){
+
+  /* контейнер для низа */
+  .dots{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:calc(84px + env(safe-area-inset-bottom));
+    display:flex;
+    justify-content:center;
+    gap:10px;
+  }
+
+  .controls{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:calc(16px + env(safe-area-inset-bottom));
+    display:flex;
+    gap:12px;
+  }
+
+  .btn{
+    min-width:64px;
+    height:48px;
+    border-radius:18px;
+  }
+}
+
