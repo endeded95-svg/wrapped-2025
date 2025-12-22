@@ -1,28 +1,20 @@
 :root{
-  /* Палитра — SOLID */
-  --green:#1d5540;
+  --bg:#1d5540;
   --red:#e33025;
   --pink:#e05188;
-  --pink2:#DBA3AB;
-  --cream:#f2cecb;
-
-  /* Интерфейс */
-  --bg:#1d5540;
   --card:#2f7357;
   --panel:#356f5b;
   --border:#f2cecb;
   --text:#f2cecb;
   --muted:#dba3ab;
-  --accent:#e33025;
-  --accent-soft:#e05188;
 }
 
 *{ box-sizing:border-box; }
 
-html, body{
+html,body{
   margin:0;
   height:100%;
-  background-color:var(--bg);
+  background:var(--bg);
   color:var(--text);
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
   -webkit-text-size-adjust:100%;
@@ -30,13 +22,9 @@ html, body{
 
 body{ overflow:hidden; }
 
-/* =====================
-   APP (фон здесь)
-===================== */
+/* контейнер со стабильной высотой на iPhone + фон */
 .app{
   position:relative;
-
-  /* iOS stable height */
   height:100vh;
   height:100dvh;
 
@@ -49,19 +37,17 @@ body{ overflow:hidden; }
   touch-action:none;
 }
 
-/* =====================
-   STORY PROGRESS
-===================== */
+/* верхний прогресс */
 .progress{
   position:absolute;
+  left:16px;
+  right:16px;
   top:calc(12px + env(safe-area-inset-top));
-  left:12px;
-  right:12px;
   display:flex;
   gap:8px;
   padding:10px;
   background:var(--panel);
-  border:1px solid var(--border);
+  border:2px solid var(--border);
   border-radius:999px;
   z-index:10;
 }
@@ -80,84 +66,55 @@ body{ overflow:hidden; }
   background:var(--text);
   transform-origin:left;
   transform:scaleX(0);
-  transition:transform .3s ease;
+  transition:transform .25s ease;
 }
 
-/* =====================
-   TRACK / SLIDES
-===================== */
+/* слайды */
 .track{
   display:flex;
   height:100%;
-  transition:transform .7s cubic-bezier(.18,.95,.22,1);
-  touch-action:none;
   will-change:transform;
+  transition:transform .6s cubic-bezier(.18,.95,.22,1);
+  touch-action:none;
 }
-
 .track.no-anim{ transition:none; }
 
 .slide{
   flex:0 0 100%;
   display:flex;
-  align-items:center;
   justify-content:center;
-
-  /* На десктопе можно шире */
+  align-items:center;
   padding:
     calc(64px + env(safe-area-inset-top))
-    clamp(16px, 4vw, 48px)
-    calc(64px + env(safe-area-inset-bottom));
-
-  position:relative;
+    16px
+    calc(120px + env(safe-area-inset-bottom));
 }
 
-.slide::before{ display:none; }
-
-/* =====================
-   CARD
-===================== */
+/* карточка */
 .card{
   width:min(980px, 100%);
   background:var(--card);
   border:2px solid var(--border);
   border-radius:28px;
-  padding:clamp(20px, 3.8vw, 44px);
-
-  /* важное: не даём карточке вылезти */
-  max-width:100%;
+  padding:clamp(20px, 4vw, 44px);
 }
 
-/* =====================
-   CONTENT ANIMATION
-===================== */
+/* контент */
 .card-inner{
   opacity:0;
-  transform:translateY(12px);
-  transition:
-    opacity .3s ease,
-    transform .45s cubic-bezier(.2,.9,.2,1);
+  transform:translateY(10px);
+  transition:opacity .25s ease, transform .35s ease;
 }
-
 .slide.active .card-inner{
   opacity:1;
   transform:none;
 }
 
-.slide.from-right .card-inner{
-  transform:translateX(12px) translateY(8px);
-}
-
-.slide.from-left .card-inner{
-  transform:translateX(-12px) translateY(8px);
-}
-
-/* =====================
-   TEXT (АДАПТИВ!)
-===================== */
 .meta{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:12px;
   font-size:14px;
   color:var(--muted);
   margin-bottom:18px;
@@ -167,47 +124,43 @@ body{ overflow:hidden; }
   padding:8px 12px;
   border-radius:999px;
   background:var(--panel);
-  border:1px solid var(--border);
+  border:2px solid var(--border);
   color:var(--text);
   white-space:nowrap;
 }
 
 .title{
-  font-size:clamp(26px, 6vw, 48px);
-  margin:0 0 12px;
+  margin:0 0 10px;
   line-height:1.05;
+  font-size:clamp(26px, 6vw, 48px);
 }
 
 .big{
-  font-size:clamp(72px, 22vw, 140px);
-  font-weight:800;
-  color:var(--accent);
-  margin:8px 0;
+  margin:10px 0;
   line-height:.95;
-
-  /* чтобы огромные цифры не ломали ширину */
-  word-break:break-word;
+  font-weight:800;
+  color:var(--red);
+  font-size:clamp(78px, 24vw, 150px);
 }
 
 .desc{
-  font-size:clamp(15px, 4.5vw, 20px);
-  max-width:52ch;
+  margin:0;
   color:var(--muted);
+  max-width:52ch;
+  font-size:clamp(15px, 4.2vw, 20px);
 }
 
-/* =====================
-   DOTS
-===================== */
+/* низ: точки и кнопки */
 .dots{
   position:absolute;
   left:50%;
-  bottom:calc(18px + env(safe-area-inset-bottom));
   transform:translateX(-50%);
+  bottom:calc(16px + env(safe-area-inset-bottom));
   display:flex;
-  gap:8px;
+  gap:10px;
   padding:10px 12px;
   background:var(--panel);
-  border:1px solid var(--border);
+  border:2px solid var(--border);
   border-radius:999px;
 }
 
@@ -216,119 +169,30 @@ body{ overflow:hidden; }
   height:8px;
   border-radius:50%;
   background:var(--muted);
-  cursor:pointer;
 }
-
 .dot.active{
-  background:var(--accent-soft);
+  background:var(--pink);
   transform:scale(1.4);
 }
 
-/* =====================
-   CONTROLS
-===================== */
 .controls{
   position:absolute;
-  right:18px;
-  bottom:calc(18px + env(safe-area-inset-bottom));
+  right:16px;
+  bottom:calc(16px + env(safe-area-inset-bottom));
   display:flex;
   gap:10px;
 }
 
 .btn{
-  height:44px;
+  height:48px;
+  min-width:64px;
   padding:0 14px;
-  border-radius:16px;
-  border:1px solid var(--border);
+  border-radius:18px;
+  border:2px solid var(--border);
   background:var(--panel);
   color:var(--text);
-  font-weight:600;
+  font-weight:700;
   cursor:pointer;
 }
 
-/* =====================
-   HINT
-===================== */
-.hint{
-  position:absolute;
-  left:18px;
-  bottom:calc(18px + env(safe-area-inset-bottom));
-  font-size:13px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  color:var(--text);
-  padding:10px 12px;
-  border-radius:14px;
-}
-
-@media(max-width:520px){
-  .hint{ display:none; }
-}
-
-/* =====================
-   MOBILE PORTRAIT FIX (как на скрине)
-===================== */
-@media (max-width: 768px) and (orientation: portrait){
-
-  /* прогресс-бар аккуратнее и не липнет к краям */
-  .progress{
-    left:16px;
-    right:16px;
-    padding:8px;
-  }
-
-  /* сверху оставляем место под прогресс */
-  .slide{
-    align-items:flex-start;
-    padding:
-      calc(72px + env(safe-area-inset-top))
-      16px
-      calc(140px + env(safe-area-inset-bottom));
-  }
-
-  .card{
-    border-radius:24px;
-    padding:28px 22px;
-  }
-
-  .card-inner{
-    width:100%;
-    text-align:left;
-  }
-
-  .meta{
-    margin-bottom:22px;
-  }
-
-  /* чтобы “2025” не вылезало */
-  .big{
-    font-size:clamp(84px, 26vw, 132px);
-    margin:18px 0;
-  }
-
-  .title{
-    font-size:clamp(28px, 7vw, 40px);
-  }
-
-  .desc{
-    font-size:clamp(15px, 4.6vw, 18px);
-  }
-
-  /* низ: доты по центру, кнопки справа от них (как сторис) */
-  .dots{
-    bottom:calc(16px + env(safe-area-inset-bottom));
-    padding:10px 12px;
-    gap:10px;
-  }
-
-  .controls{
-    right:16px;
-    bottom:calc(16px + env(safe-area-inset-bottom));
-  }
-
-  .btn{
-    height:48px;
-    min-width:64px;
-    border-radius:18px;
-  }
-}
+.hint{ display:none; }
