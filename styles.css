@@ -30,7 +30,7 @@ body{ overflow:hidden; }
   height:100dvh;
 
   background-color:var(--bg);
-  background-image:url("./bg.svg");
+  background-image:url("./Pat.svg");
   background-repeat:repeat;
   background-position:0 0;
   background-size:80px 80px;
