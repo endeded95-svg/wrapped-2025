@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <!-- solid фон -->
+  <rect width="80" height="80" fill="#1d5540"/>
+
+  <!-- клетка -->
+  <path d="M0 0H80M0 40H80M0 80H80M0 0V80M40 0V80M80 0V80"
+        stroke="#e33025"
+        stroke-width="2"
+        shape-rendering="crispEdges"/>
+</svg>
