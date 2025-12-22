@@ -17,12 +17,7 @@
   --accent-soft:#e05188;
 }
 
-/* =====================
-   RESET
-===================== */
-*{
-  box-sizing:border-box;
-}
+*{ box-sizing:border-box; }
 
 html, body{
   margin:0;
@@ -33,26 +28,23 @@ html, body{
   -webkit-text-size-adjust:100%;
 }
 
-body{
-  overflow:hidden;
-}
+body{ overflow:hidden; }
 
 /* =====================
-   APP (фон здесь!)
+   APP (фон здесь)
 ===================== */
 .app{
   position:relative;
 
-  /* стабильная высота на iOS */
+  /* iOS stable height */
   height:100vh;
   height:100dvh;
 
-  /* SVG GRID BACKGROUND */
   background-color:var(--bg);
   background-image:url("./bg.svg");
   background-repeat:repeat;
   background-position:0 0;
-  background-size:80px 80px; /* масштаб клетки */
+  background-size:80px 80px;
 
   touch-action:none;
 }
@@ -99,36 +91,40 @@ body{
   height:100%;
   transition:transform .7s cubic-bezier(.18,.95,.22,1);
   touch-action:none;
+  will-change:transform;
 }
 
-.track.no-anim{
-  transition:none;
-}
+.track.no-anim{ transition:none; }
 
 .slide{
   flex:0 0 100%;
   display:flex;
   align-items:center;
   justify-content:center;
+
+  /* На десктопе можно шире */
   padding:
-    calc(48px + env(safe-area-inset-top))
-    48px
-    calc(48px + env(safe-area-inset-bottom));
+    calc(64px + env(safe-area-inset-top))
+    clamp(16px, 4vw, 48px)
+    calc(64px + env(safe-area-inset-bottom));
+
   position:relative;
 }
 
-/* никаких эффектов */
 .slide::before{ display:none; }
 
 /* =====================
    CARD
 ===================== */
 .card{
-  width:min(980px,100%);
+  width:min(980px, 100%);
   background:var(--card);
   border:2px solid var(--border);
   border-radius:28px;
-  padding:44px;
+  padding:clamp(20px, 3.8vw, 44px);
+
+  /* важное: не даём карточке вылезти */
+  max-width:100%;
 }
 
 /* =====================
@@ -156,7 +152,7 @@ body{
 }
 
 /* =====================
-   TEXT
+   TEXT (АДАПТИВ!)
 ===================== */
 .meta{
   display:flex;
@@ -173,22 +169,28 @@ body{
   background:var(--panel);
   border:1px solid var(--border);
   color:var(--text);
+  white-space:nowrap;
 }
 
 .title{
-  font-size:48px;
+  font-size:clamp(26px, 6vw, 48px);
   margin:0 0 12px;
+  line-height:1.05;
 }
 
 .big{
-  font-size:120px;
+  font-size:clamp(72px, 22vw, 140px);
   font-weight:800;
   color:var(--accent);
   margin:8px 0;
+  line-height:.95;
+
+  /* чтобы огромные цифры не ломали ширину */
+  word-break:break-word;
 }
 
 .desc{
-  font-size:20px;
+  font-size:clamp(15px, 4.5vw, 20px);
   max-width:52ch;
   color:var(--muted);
 }
@@ -214,6 +216,7 @@ body{
   height:8px;
   border-radius:50%;
   background:var(--muted);
+  cursor:pointer;
 }
 
 .dot.active{
@@ -260,4 +263,72 @@ body{
 
 @media(max-width:520px){
   .hint{ display:none; }
+}
+
+/* =====================
+   MOBILE PORTRAIT FIX (как на скрине)
+===================== */
+@media (max-width: 768px) and (orientation: portrait){
+
+  /* прогресс-бар аккуратнее и не липнет к краям */
+  .progress{
+    left:16px;
+    right:16px;
+    padding:8px;
+  }
+
+  /* сверху оставляем место под прогресс */
+  .slide{
+    align-items:flex-start;
+    padding:
+      calc(72px + env(safe-area-inset-top))
+      16px
+      calc(140px + env(safe-area-inset-bottom));
+  }
+
+  .card{
+    border-radius:24px;
+    padding:28px 22px;
+  }
+
+  .card-inner{
+    width:100%;
+    text-align:left;
+  }
+
+  .meta{
+    margin-bottom:22px;
+  }
+
+  /* чтобы “2025” не вылезало */
+  .big{
+    font-size:clamp(84px, 26vw, 132px);
+    margin:18px 0;
+  }
+
+  .title{
+    font-size:clamp(28px, 7vw, 40px);
+  }
+
+  .desc{
+    font-size:clamp(15px, 4.6vw, 18px);
+  }
+
+  /* низ: доты по центру, кнопки справа от них (как сторис) */
+  .dots{
+    bottom:calc(16px + env(safe-area-inset-bottom));
+    padding:10px 12px;
+    gap:10px;
+  }
+
+  .controls{
+    right:16px;
+    bottom:calc(16px + env(safe-area-inset-bottom));
+  }
+
+  .btn{
+    height:48px;
+    min-width:64px;
+    border-radius:18px;
+  }
 }
