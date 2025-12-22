@@ -1,19 +1,25 @@
 :root{
+  /* Палитра — ТОЛЬКО SOLID */
   --green:#1d5540;
   --red:#e33025;
   --pink:#e05188;
   --pink2:#DBA3AB;
   --cream:#f2cecb;
 
-  --bg:var(--green);
-  --card:rgba(235,208,205,.14);
-  --text:rgba(235,208,205,.96);
-  --muted:rgba(235,208,205,.78);
-  --accent:var(--red);
-  --accent-soft:var(--pink);
+  /* Интерфейс */
+  --bg:#1d5540;
+  --card:#2f7357;
+  --panel:#356f5b;
+  --border:#f2cecb;
+  --text:#f2cecb;
+  --muted:#dba3ab;
+  --accent:#e33025;
+  --accent-soft:#e05188;
 }
 
-*{ box-sizing:border-box }
+*{
+  box-sizing:border-box;
+}
 
 html,body{
   margin:0;
@@ -23,89 +29,95 @@ html,body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
 }
 
-body{ overflow:hidden }
-.app{ height:100%; position:relative }
+body{
+  overflow:hidden;
+}
 
-/* =========================
-   STORY PROGRESS (SOLID)
-========================= */
+.app{
+  height:100%;
+  position:relative;
+}
+
+/* =====================
+   STORY PROGRESS — SOLID
+===================== */
 .progress{
   position:absolute;
+  top:12px;
   left:12px;
   right:12px;
-  top:12px;
   display:flex;
   gap:8px;
-  z-index:5;
   padding:10px;
+  background:var(--panel);
+  border:1px solid var(--border);
   border-radius:999px;
-  background:rgba(235,208,205,.12);
-  border:1px solid rgba(235,208,205,.22);
+  z-index:10;
 }
 
 .seg{
   flex:1;
   height:4px;
+  background:var(--muted);
   border-radius:999px;
   overflow:hidden;
-  background:rgba(235,208,205,.28);
-  cursor:pointer;
 }
 
 .seg .fill{
-  height:100%;
   width:100%;
-  transform-origin:left center;
+  height:100%;
+  background:var(--text);
+  transform-origin:left;
   transform:scaleX(0);
-  background:rgba(235,208,205,.95);
-  transition:transform .35s ease;
+  transition:transform .3s ease;
 }
 
-/* =========================
-   TRACK & SLIDES
-========================= */
+/* =====================
+   TRACK / SLIDES
+===================== */
 .track{
   display:flex;
   height:100%;
-  will-change:transform;
   transition:transform .7s cubic-bezier(.18,.95,.22,1);
 }
 
-.track.no-anim{ transition:none !important }
-.track.grabbing{ cursor:grabbing }
+.track.no-anim{
+  transition:none;
+}
 
 .slide{
   flex:0 0 100%;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:clamp(18px,4vw,48px);
+  padding:48px;
   position:relative;
 }
 
-/* ❌ никаких before / after / glow */
-.slide::before{ display:none }
-
-/* =========================
-   CARD (SOLID)
-========================= */
-.card{
-  width:min(980px,100%);
-  background:rgba(235,208,205,.14);
-  border:1px solid rgba(235,208,205,.32);
-  border-radius:28px;
-  padding:clamp(20px,4vw,44px);
-  box-shadow:0 20px 48px rgba(0,0,0,.28);
+/* НИЧЕГО */
+.slide::before{
+  display:none;
 }
 
-/* =========================
+/* =====================
+   CARD — SOLID
+===================== */
+.card{
+  width:min(980px,100%);
+  background:var(--card);
+  border:2px solid var(--border);
+  border-radius:28px;
+  padding:44px;
+}
+
+/* =====================
    CONTENT ANIMATION
-========================= */
+===================== */
 .card-inner{
   opacity:0;
-  transform:translateY(14px) scale(.985);
+  transform:translateY(12px);
   transition:
-    opacity .35s ease,
+    opacity .3s ease,
     transform .45s cubic-bezier(.2,.9,.2,1);
 }
 
@@ -114,17 +126,17 @@ body{ overflow:hidden }
   transform:none;
 }
 
-/* направление */
 .slide.from-right .card-inner{
-  transform:translateX(14px) translateY(10px) scale(.985);
-}
-.slide.from-left .card-inner{
-  transform:translateX(-14px) translateY(10px) scale(.985);
+  transform:translateX(12px) translateY(8px);
 }
 
-/* =========================
-   TYPO & UI
-========================= */
+.slide.from-left .card-inner{
+  transform:translateX(-12px) translateY(8px);
+}
+
+/* =====================
+   TEXT
+===================== */
 .meta{
   display:flex;
   justify-content:space-between;
@@ -137,34 +149,32 @@ body{ overflow:hidden }
 .pill{
   padding:8px 12px;
   border-radius:999px;
-  background:rgba(235,208,205,.16);
-  border:1px solid rgba(235,208,205,.30);
+  background:var(--panel);
+  border:1px solid var(--border);
+  color:var(--text);
 }
 
 .title{
-  font-size:clamp(28px,4vw,56px);
+  font-size:48px;
   margin:0 0 12px;
-  line-height:1.05;
-  letter-spacing:-.5px;
 }
 
 .big{
-  font-size:clamp(56px,10vw,140px);
+  font-size:120px;
   font-weight:800;
   color:var(--accent);
-  line-height:.95;
   margin:8px 0;
 }
 
 .desc{
-  font-size:clamp(16px,2.2vw,22px);
+  font-size:20px;
   max-width:52ch;
   color:var(--muted);
 }
 
-/* =========================
+/* =====================
    DOTS
-========================= */
+===================== */
 .dots{
   position:absolute;
   left:50%;
@@ -173,17 +183,16 @@ body{ overflow:hidden }
   display:flex;
   gap:8px;
   padding:10px 12px;
+  background:var(--panel);
+  border:1px solid var(--border);
   border-radius:999px;
-  background:rgba(235,208,205,.12);
-  border:1px solid rgba(235,208,205,.22);
 }
 
 .dot{
   width:8px;
   height:8px;
   border-radius:50%;
-  background:rgba(235,208,205,.45);
-  cursor:pointer;
+  background:var(--muted);
 }
 
 .dot.active{
@@ -191,9 +200,9 @@ body{ overflow:hidden }
   transform:scale(1.4);
 }
 
-/* =========================
+/* =====================
    CONTROLS
-========================= */
+===================== */
 .controls{
   position:absolute;
   right:18px;
@@ -206,55 +215,28 @@ body{ overflow:hidden }
   height:44px;
   padding:0 14px;
   border-radius:16px;
-  border:1px solid rgba(235,208,205,.32);
-  background:rgba(235,208,205,.14);
+  border:1px solid var(--border);
+  background:var(--panel);
   color:var(--text);
-  cursor:pointer;
   font-weight:600;
+  cursor:pointer;
 }
 
-/* =========================
+/* =====================
    HINT
-========================= */
+===================== */
 .hint{
   position:absolute;
   left:18px;
   bottom:18px;
   font-size:13px;
-  color:rgba(235,208,205,.86);
-  background:rgba(53,119,68,.55);
-  border:1px solid rgba(235,208,205,.22);
+  background:var(--panel);
+  border:1px solid var(--border);
+  color:var(--text);
   padding:10px 12px;
   border-radius:14px;
 }
 
 @media(max-width:520px){
-  .hint{ display:none }
-}
-
-/* =========================
-   MOBILE PORTRAIT
-========================= */
-@media (max-width:768px) and (orientation:portrait){
-  .slide{ align-items:flex-start; padding:64px 16px 120px }
-  .card{ height:100%; display:flex; align-items:center }
-  .card-inner{ width:100%; text-align:center }
-  .meta{ justify-content:center; gap:12px; margin-bottom:24px }
-  .title{ font-size:clamp(24px,6vw,34px) }
-  .big{ font-size:clamp(72px,22vw,120px); margin:24px 0 }
-  .desc{ margin:0 auto; font-size:clamp(15px,4.5vw,18px) }
-  .dots{ bottom:70px }
-  .controls{ right:50%; transform:translateX(50%); bottom:16px }
-  .btn{ height:48px; min-width:64px }
-}
-
-/* =========================
-   REDUCED MOTION
-========================= */
-@media (prefers-reduced-motion: reduce){
-  .track,
-  .card-inner,
-  .seg .fill{
-    transition:none !important;
-  }
+  .hint{display:none;}
 }
