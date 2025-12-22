@@ -33,7 +33,7 @@ body{ overflow:hidden; }
   background-image:url("./bg.svg");
   background-repeat:repeat;
   background-position:0 0;
-  background-size:80px 80px;
+  background-size:300px 300px;
 
   touch-action:none;
 }
