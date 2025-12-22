@@ -1,11 +1,12 @@
 :root{
-  /* Палитра */
+  /* Палитра — ТОЛЬКО SOLID */
   --green:#1d5540;
   --red:#e33025;
   --pink:#e05188;
+  --pink2:#DBA3AB;
   --cream:#f2cecb;
 
-  /* UI */
+  /* Интерфейс */
   --bg:#1d5540;
   --card:#2f7357;
   --panel:#356f5b;
@@ -13,26 +14,22 @@
   --text:#f2cecb;
   --muted:#dba3ab;
   --accent:#e33025;
+  --accent-soft:#e05188;
 }
 
-/* =====================
-   RESET
-===================== */
 *{
   box-sizing:border-box;
 }
 
-html, body{
+html,body{
   margin:0;
   height:100%;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-  color:var(--text);
-
-  /* SVG GRID BACKGROUND */
   background-color:var(--bg);
   background-image:url("./bg.svg");
   background-repeat:repeat;
   background-position:0 0;
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
 }
 
 body{
@@ -45,7 +42,7 @@ body{
 }
 
 /* =====================
-   STORY PROGRESS
+   STORY PROGRESS — SOLID
 ===================== */
 .progress{
   position:absolute;
@@ -56,7 +53,7 @@ body{
   gap:8px;
   padding:10px;
   background:var(--panel);
-  border:2px solid var(--border);
+  border:1px solid var(--border);
   border-radius:999px;
   z-index:10;
 }
@@ -91,10 +88,6 @@ body{
   transition:none;
 }
 
-.track.grabbing{
-  cursor:grabbing;
-}
-
 .slide{
   flex:0 0 100%;
   display:flex;
@@ -104,11 +97,13 @@ body{
   position:relative;
 }
 
-/* никаких псевдоэлементов */
-.slide::before{ display:none; }
+/* НИЧЕГО */
+.slide::before{
+  display:none;
+}
 
 /* =====================
-   CARD
+   CARD — SOLID
 ===================== */
 .card{
   width:min(980px,100%);
@@ -143,7 +138,7 @@ body{
 }
 
 /* =====================
-   TYPOGRAPHY
+   TEXT
 ===================== */
 .meta{
   display:flex;
@@ -158,14 +153,13 @@ body{
   padding:8px 12px;
   border-radius:999px;
   background:var(--panel);
-  border:2px solid var(--border);
+  border:1px solid var(--border);
   color:var(--text);
 }
 
 .title{
   font-size:48px;
   margin:0 0 12px;
-  line-height:1.05;
 }
 
 .big{
@@ -173,7 +167,6 @@ body{
   font-weight:800;
   color:var(--accent);
   margin:8px 0;
-  line-height:.95;
 }
 
 .desc{
@@ -194,7 +187,7 @@ body{
   gap:8px;
   padding:10px 12px;
   background:var(--panel);
-  border:2px solid var(--border);
+  border:1px solid var(--border);
   border-radius:999px;
 }
 
@@ -203,11 +196,10 @@ body{
   height:8px;
   border-radius:50%;
   background:var(--muted);
-  cursor:pointer;
 }
 
 .dot.active{
-  background:var(--pink);
+  background:var(--accent-soft);
   transform:scale(1.4);
 }
 
@@ -226,7 +218,7 @@ body{
   height:44px;
   padding:0 14px;
   border-radius:16px;
-  border:2px solid var(--border);
+  border:1px solid var(--border);
   background:var(--panel);
   color:var(--text);
   font-weight:600;
@@ -242,69 +234,12 @@ body{
   bottom:18px;
   font-size:13px;
   background:var(--panel);
-  border:2px solid var(--border);
+  border:1px solid var(--border);
   color:var(--text);
   padding:10px 12px;
   border-radius:14px;
 }
 
 @media(max-width:520px){
-  .hint{ display:none; }
-}
-
-/* =====================
-   MOBILE PORTRAIT
-===================== */
-@media (max-width:768px) and (orientation:portrait){
-  .slide{
-    align-items:flex-start;
-    padding:64px 16px 120px;
-  }
-
-  .card{
-    height:100%;
-    display:flex;
-    align-items:center;
-    padding:32px 24px;
-  }
-
-  .card-inner{
-    width:100%;
-    text-align:center;
-  }
-
-  .meta{
-    justify-content:center;
-    gap:12px;
-    margin-bottom:24px;
-  }
-
-  .title{
-    font-size:32px;
-  }
-
-  .big{
-    font-size:96px;
-    margin:24px 0;
-  }
-
-  .desc{
-    margin:0 auto;
-    font-size:18px;
-  }
-
-  .dots{
-    bottom:70px;
-  }
-
-  .controls{
-    right:50%;
-    transform:translateX(50%);
-    bottom:16px;
-  }
-
-  .btn{
-    height:48px;
-    min-width:64px;
-  }
+  .hint{display:none;}
 }
