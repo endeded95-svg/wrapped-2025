@@ -239,3 +239,30 @@ body{ overflow:hidden; }
     padding-bottom:calc(104px + env(safe-area-inset-bottom));
   }
 }
+/* === MOBILE OVERRIDES (FINAL) === */
+@media (max-width: 768px){
+
+  /* 1) УБРАТЬ ТОЧКИ НА МОБИЛКЕ НАВСЕГДА */
+  #dots,
+  .dots{
+    display:none !important;
+    visibility:hidden !important;
+    pointer-events:none !important;
+  }
+
+  /* 2) СТРЕЛКИ СНИЗУ ПО ЦЕНТРУ */
+  .controls{
+    position:absolute !important;
+    left:50% !important;
+    right:auto !important;
+    bottom:calc(16px + env(safe-area-inset-bottom)) !important;
+    transform:translateX(-50%) !important;
+    display:flex !important;
+    gap:12px !important;
+    z-index:9999 !important;
+  }
+
+  /* 3) ЧУТЬ БОЛЬШЕ МЕСТА СНИЗУ ПОД СТРЕЛКИ */
+  .slide{
+    pa
+
