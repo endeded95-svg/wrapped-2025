@@ -2,48 +2,65 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Наш год — листалка</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Твой год — листалка</title>
 
   <style>
     :root{
-      /* Палитра с картинки */
-      --green:#357744;   /* rgb(53,119,68) */
-      --red:#D44335;     /* rgb(212,67,53) */
-      --pink:#DE7899;    /* rgb(222,120,153) */
-      --pink2:#DBA3AB;   /* rgb(219,163,171) */
-      --cream:#EBD0CD;   /* rgb(235,208,205) */
+      --green:#1d5540;
+      --red:#e33025;
+      --pink:#e05188;
+      --pink2:#DBA3AB;
+      --cream:#f2cecb;
 
-      /* Основные цвета интерфейса (только из палитры выше) */
       --bg:var(--green);
-      --card:rgba(235,208,205,.14);
       --text:rgba(235,208,205,.96);
       --muted:rgba(235,208,205,.78);
       --accent:var(--red);
       --accent-soft:var(--pink);
+
+      /* Safe-area для iPhone (чёлка/домой) */
+      --safeB: env(safe-area-inset-bottom, 0px);
+      --safeT: env(safe-area-inset-top, 0px);
     }
 
     *{box-sizing:border-box}
     html,body{
-      margin:0;height:100%;
+      margin:0;
+      height:100%;
       background:var(--bg);
       color:var(--text);
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
     }
-    body{overflow:hidden}
 
-    .app{height:100%;position:relative}
-    .track{
-      display:flex;height:100%;
-      transition:transform .55s cubic-bezier(.2,.9,.2,1);
+    /* фиксируем «прыгающую» высоту на мобилках */
+    body{
+      overflow:hidden;
+      -webkit-text-size-adjust:100%;
     }
+
+    .app{
+      position:relative;
+      height:100svh;          /* стабильная высота на мобилках */
+      min-height:100dvh;      /* на всякий */
+      padding-top:var(--safeT);
+    }
+
+    .track{
+      display:flex;
+      height:100%;
+      transition:transform .55s cubic-bezier(.2,.9,.2,1);
+      will-change:transform;
+    }
+
     .slide{
       flex:0 0 100%;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:clamp(18px,4vw,48px);
+      padding:clamp(16px,4vw,48px);
       position:relative;
+      touch-action: pan-y; /* свайп по X работает, вертикальные жесты не ломаем */
     }
 
     .slide::before{
@@ -51,24 +68,23 @@
       position:absolute;
       inset:-20%;
       background:radial-gradient(800px 500px at var(--gx,30%) var(--gy,30%),
-        rgba(222,120,153,.22),
-        rgba(219,163,171,.10),
+        rgba(224,81,136,.22),
+        rgba(224,81,136,.10),
         transparent 70%);
-      filter:blur(6px);
+      filter:blur(28px);
       pointer-events:none;
     }
 
     .card{
       width:min(980px,100%);
-      background:linear-gradient(
-        180deg,
-        rgba(235,208,205,.22),
-        rgba(235,208,205,.10)
-      );
+      background:linear-gradient(180deg, rgba(224,81,136,.22), rgba(235,208,205,.10));
       border:1px solid rgba(235,208,205,.28);
-      border-radius:28px;
-      padding:clamp(20px,4vw,44px);
+      border-radius:24px;
+      padding:clamp(18px,4vw,44px);
       box-shadow:0 24px 80px rgba(0,0,0,.25);
+
+      /* чтобы контент не упирался в кнопки/точки снизу */
+      padding-bottom:calc(clamp(18px,4vw,44px) + 70px + var(--safeB));
     }
 
     .meta{
@@ -78,6 +94,8 @@
       font-size:14px;
       color:var(--muted);
       margin-bottom:18px;
+      gap:12px;
+      flex-wrap:wrap;
     }
 
     .pill{
@@ -86,29 +104,34 @@
       background:rgba(235,208,205,.14);
       border:1px solid rgba(235,208,205,.26);
       color:rgba(235,208,205,.92);
+      white-space:nowrap;
     }
 
     .title{
-      font-size:clamp(28px,4vw,56px);
+      font-size:clamp(24px,4.8vw,56px);
       margin:0 0 12px;
-      line-height:1.05;
-      letter-spacing:-.5px;
+      line-height:1.08;
+      letter-spacing:-.4px;
       color:rgba(235,208,205,.98);
+      overflow-wrap:anywhere;
     }
 
     .big{
-      font-size:clamp(56px,10vw,140px);
+      font-size:clamp(54px,10.5vw,140px);
       font-weight:800;
       color:var(--accent);
       line-height:.95;
-      margin:8px 0;
-      text-shadow:0 10px 30px rgba(212,67,53,.22);
+      margin:10px 0 12px;
+      text-shadow:0 10px 30px rgba(227,48,37,.22);
+      overflow-wrap:anywhere;
     }
 
     .desc{
-      font-size:clamp(16px,2.2vw,22px);
-      max-width:52ch;
+      font-size:clamp(15px,2.4vw,22px);
+      max-width:56ch;
       color:var(--muted);
+      line-height:1.35;
+      overflow-wrap:anywhere;
     }
 
     .card-inner{
@@ -121,13 +144,14 @@
       transform:none;
     }
 
+    /* Навигация снизу — учитываем safe-area */
     .dots{
       position:absolute;
       left:50%;
-      bottom:18px;
+      bottom:calc(64px + var(--safeB));
       transform:translateX(-50%);
       display:flex;
-      gap:8px;
+      gap:10px;
       padding:10px 12px;
       border-radius:999px;
       background:rgba(235,208,205,.12);
@@ -136,109 +160,84 @@
     }
 
     .dot{
-      width:8px;height:8px;border-radius:50%;
+      width:9px;height:9px;border-radius:50%;
       background:rgba(235,208,205,.40);
       cursor:pointer;
     }
     .dot.active{
       background:var(--accent-soft);
-      transform:scale(1.4);
+      transform:scale(1.35);
     }
 
     .controls{
       position:absolute;
-      right:18px;
-      bottom:18px;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:calc(14px + var(--safeB));
       display:flex;
       gap:10px;
+      z-index:5;
     }
+
     .btn{
-      height:44px;
+      height:48px;
+      min-width:72px;
       padding:0 14px;
       border-radius:16px;
       border:1px solid rgba(235,208,205,.26);
       background:rgba(235,208,205,.12);
       color:var(--text);
       cursor:pointer;
-      font-weight:600;
+      font-weight:700;
+      -webkit-tap-highlight-color: transparent;
     }
     .btn:disabled{opacity:.4}
 
     .hint{
       position:absolute;
-      left:18px;
-      bottom:18px;
+      left:16px;
+      bottom:calc(14px + var(--safeB));
       font-size:13px;
       color:rgba(235,208,205,.86);
-      background:rgba(53,119,68,.35);
+      background:rgba(29,85,64,.35);
       border:1px solid rgba(235,208,205,.22);
       padding:10px 12px;
       border-radius:14px;
       backdrop-filter:blur(10px);
     }
 
-    @media(max-width:520px){
+    /* Мобилки: делаем компактнее и по центру */
+    @media (max-width: 768px){
+      .slide{
+        align-items:flex-start;
+        padding:18px 14px;
+      }
+
+      .card{
+        border-radius:22px;
+      }
+
+      .card-inner{
+        text-align:center;
+      }
+
+      .meta{
+        justify-content:center;
+      }
+
+      .desc{
+        margin:0 auto;
+      }
+
       .hint{display:none}
     }
-    
-    /* Вертикальный формат (мобильные экраны) */
-@media (max-width: 768px) and (orientation: portrait){
 
-  .slide{
-    align-items:flex-start;
-    padding:24px 16px 120px;
-  }
-
-  .card{
-    height:100%;
-    display:flex;
-    align-items:center;
-  }
-
-  .card-inner{
-    width:100%;
-    text-align:center;
-  }
-
-  .meta{
-    justify-content:center;
-    gap:12px;
-    margin-bottom:24px;
-  }
-
-  .title{
-    font-size:clamp(24px,6vw,34px);
-  }
-
-  .big{
-    font-size:clamp(72px,22vw,120px);
-    margin:24px 0;
-  }
-
-  .desc{
-    margin:0 auto;
-    font-size:clamp(15px,4.5vw,18px);
-  }
-
-  .dots{
-    bottom:70px;
-  }
-
-  .controls{
-    right:50%;
-    transform:translateX(50%);
-    bottom:16px;
-  }
-
-  .btn{
-    height:48px;
-    min-width:64px;
-  }
-
-  .hint{
-    display:none;
-  }
-}
+    /* Очень маленькие экраны */
+    @media (max-width: 360px){
+      .pill{font-size:13px}
+      .meta{font-size:13px}
+      .btn{min-width:64px}
+    }
   </style>
 </head>
 <body>
@@ -246,13 +245,13 @@
 <div class="app">
   <div class="track" id="track"></div>
 
-  <div class="hint">Свайпай • Колёсико • ← →</div>
+  <div class="hint">Свайпай • ← →</div>
 
   <div class="dots" id="dots"></div>
 
   <div class="controls">
-    <button class="btn" id="prev">←</button>
-    <button class="btn" id="next">→</button>
+    <button class="btn" id="prev" aria-label="Предыдущий слайд">←</button>
+    <button class="btn" id="next" aria-label="Следующий слайд">→</button>
   </div>
 </div>
 
@@ -267,7 +266,7 @@ const slides=[
  {pill:"Wrapped 2025",title:"Побывали в новых местах...",big:"2 раза",desc:"Москва и Санкт-Петербург."},
  {pill:"Wrapped 2025",title:"Провели вместе",big:"7 200 мин.",desc:"и даже не ругались!"},
  {pill:"Wrapped 2025",title:"Самый спокойный момент",big:"Сон",desc:"Когда мы вместе и я достаю тебя ножкой."},
- {pill:"Wrapped 2025",title:"Лучшее за год",big:"Ты",desc:"Пусть в Новом  2026 году все твои цели сбудутся, а я буду тебя поддерживать."}
+ {pill:"Wrapped 2025",title:"Лучшее за год",big:"Ты",desc:"Пусть в Новом 2026 году все твои цели сбудутся, а я буду тебя поддерживать."}
 ];
 
 const track=document.getElementById("track");
@@ -275,51 +274,61 @@ const dots=document.getElementById("dots");
 let index=0;
 
 slides.forEach((s,i)=>{
- const slide=document.createElement("section");
- slide.className="slide";
- slide.style.setProperty("--gx",`${20+(i*7)%60}%`);
- slide.style.setProperty("--gy",`${30+(i*9)%50}%`);
- slide.innerHTML=`
-  <div class="card">
-   <div class="card-inner">
-    <div class="meta">
-      <div class="pill">✨ ${s.pill}</div>
-      <div>${i+1}/${slides.length}</div>
-    </div>
-    <h1 class="title">${s.title}</h1>
-    <div class="big">${s.big}</div>
-    <p class="desc">${s.desc}</p>
-   </div>
-  </div>`;
- track.appendChild(slide);
+  const slide=document.createElement("section");
+  slide.className="slide";
+  slide.style.setProperty("--gx",`${20+(i*7)%60}%`);
+  slide.style.setProperty("--gy",`${30+(i*9)%50}%`);
+  slide.innerHTML=`
+    <div class="card">
+      <div class="card-inner">
+        <div class="meta">
+          <div class="pill">✨ ${s.pill}</div>
+          <div>${i+1}/${slides.length}</div>
+        </div>
+        <h1 class="title">${s.title}</h1>
+        <div class="big">${s.big}</div>
+        <p class="desc">${s.desc}</p>
+      </div>
+    </div>`;
+  track.appendChild(slide);
 
- const dot=document.createElement("div");
- dot.className="dot";
- dot.onclick=()=>go(i);
- dots.appendChild(dot);
+  const dot=document.createElement("div");
+  dot.className="dot";
+  dot.onclick=()=>go(i);
+  dots.appendChild(dot);
 });
 
 function go(i){
- index=Math.max(0,Math.min(slides.length-1,i));
- track.style.transform=`translateX(${-index*100}%)`;
- document.querySelectorAll(".slide").forEach((s,j)=>s.classList.toggle("active",j===index));
- document.querySelectorAll(".dot").forEach((d,j)=>d.classList.toggle("active",j===index));
+  index=Math.max(0,Math.min(slides.length-1,i));
+  track.style.transform=`translateX(${-index*100}%)`;
+  document.querySelectorAll(".slide").forEach((s,j)=>s.classList.toggle("active",j===index));
+  document.querySelectorAll(".dot").forEach((d,j)=>d.classList.toggle("active",j===index));
+
+  // (необязательно) отключаем стрелки на краях
+  document.getElementById("prev").disabled = index===0;
+  document.getElementById("next").disabled = index===slides.length-1;
 }
 
 document.getElementById("next").onclick=()=>go(index+1);
 document.getElementById("prev").onclick=()=>go(index-1);
 
 window.addEventListener("keydown",e=>{
- if(e.key==="ArrowRight")go(index+1);
- if(e.key==="ArrowLeft")go(index-1);
+  if(e.key==="ArrowRight")go(index+1);
+  if(e.key==="ArrowLeft")go(index-1);
 });
 
-let startX=0;
-window.addEventListener("touchstart",e=>startX=e.touches[0].clientX);
+// свайп
+let startX=0, startY=0;
+window.addEventListener("touchstart",e=>{
+  startX=e.touches[0].clientX;
+  startY=e.touches[0].clientY;
+},{passive:true});
+
 window.addEventListener("touchend",e=>{
- let dx=e.changedTouches[0].clientX-startX;
- if(Math.abs(dx)>40) dx<0?go(index+1):go(index-1);
-});
+  const dx=e.changedTouches[0].clientX-startX;
+  const dy=e.changedTouches[0].clientY-startY;
+  if(Math.abs(dx)>40 && Math.abs(dx)>Math.abs(dy)) dx<0 ? go(index+1) : go(index-1);
+},{passive:true});
 
 go(0);
 </script>
