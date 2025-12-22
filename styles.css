@@ -48,7 +48,7 @@ body{ overflow:hidden }
   height:4px;
   border-radius:999px;
   overflow:hidden;
-  background:rgba(235,208,205,.25);
+  background:rgba(235,208,205,.28);
   cursor:pointer;
 }
 
@@ -58,7 +58,7 @@ body{ overflow:hidden }
   transform-origin:left center;
   transform:scaleX(0);
   background:rgba(235,208,205,.95);
-  transition:transform .45s ease;
+  transition:transform .35s ease;
 }
 
 /* =========================
@@ -83,22 +83,8 @@ body{ overflow:hidden }
   position:relative;
 }
 
-/* ❌ БЫЛ ГРАДИЕНТ — УБРАН
-   ✔ теперь просто мягкое свечение */
-.slide::before{
-  content:"";
-  position:absolute;
-  inset:-20%;
-  background:rgba(224,81,136,.12);
-  filter:blur(40px);
-  opacity:.6;
-  transition:opacity .6s ease;
-  pointer-events:none;
-}
-
-.slide.active::before{
-  opacity:.9;
-}
+/* ❌ никаких before / after / glow */
+.slide::before{ display:none }
 
 /* =========================
    CARD (SOLID)
@@ -106,10 +92,10 @@ body{ overflow:hidden }
 .card{
   width:min(980px,100%);
   background:rgba(235,208,205,.14);
-  border:1px solid rgba(235,208,205,.30);
+  border:1px solid rgba(235,208,205,.32);
   border-radius:28px;
   padding:clamp(20px,4vw,44px);
-  box-shadow:0 24px 60px rgba(0,0,0,.25);
+  box-shadow:0 20px 48px rgba(0,0,0,.28);
 }
 
 /* =========================
@@ -119,8 +105,8 @@ body{ overflow:hidden }
   opacity:0;
   transform:translateY(14px) scale(.985);
   transition:
-    opacity .45s ease,
-    transform .55s cubic-bezier(.2,.9,.2,1);
+    opacity .35s ease,
+    transform .45s cubic-bezier(.2,.9,.2,1);
 }
 
 .slide.active .card-inner{
@@ -152,7 +138,7 @@ body{ overflow:hidden }
   padding:8px 12px;
   border-radius:999px;
   background:rgba(235,208,205,.16);
-  border:1px solid rgba(235,208,205,.28);
+  border:1px solid rgba(235,208,205,.30);
 }
 
 .title{
@@ -220,7 +206,7 @@ body{ overflow:hidden }
   height:44px;
   padding:0 14px;
   border-radius:16px;
-  border:1px solid rgba(235,208,205,.30);
+  border:1px solid rgba(235,208,205,.32);
   background:rgba(235,208,205,.14);
   color:var(--text);
   cursor:pointer;
@@ -236,7 +222,7 @@ body{ overflow:hidden }
   bottom:18px;
   font-size:13px;
   color:rgba(235,208,205,.86);
-  background:rgba(53,119,68,.45);
+  background:rgba(53,119,68,.55);
   border:1px solid rgba(235,208,205,.22);
   padding:10px 12px;
   border-radius:14px;
