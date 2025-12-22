@@ -2,335 +2,294 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Твой год — листалка</title>
-
-  <style>
-    :root{
-      --green:#1d5540;
-      --red:#e33025;
-      --pink:#e05188;
-      --pink2:#DBA3AB;
-      --cream:#f2cecb;
-
-      --bg:var(--green);
-      --text:rgba(235,208,205,.96);
-      --muted:rgba(235,208,205,.78);
-      --accent:var(--red);
-      --accent-soft:var(--pink);
-
-      /* Safe-area для iPhone (чёлка/домой) */
-      --safeB: env(safe-area-inset-bottom, 0px);
-      --safeT: env(safe-area-inset-top, 0px);
-    }
-
-    *{box-sizing:border-box}
-    html,body{
-      margin:0;
-      height:100%;
-      background:var(--bg);
-      color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-    }
-
-    /* фиксируем «прыгающую» высоту на мобилках */
-    body{
-      overflow:hidden;
-      -webkit-text-size-adjust:100%;
-    }
-
-    .app{
-      position:relative;
-      height:100svh;          /* стабильная высота на мобилках */
-      min-height:100dvh;      /* на всякий */
-      padding-top:var(--safeT);
-    }
-
-    .track{
-      display:flex;
-      height:100%;
-      transition:transform .55s cubic-bezier(.2,.9,.2,1);
-      will-change:transform;
-    }
-
-    .slide{
-      flex:0 0 100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:clamp(16px,4vw,48px);
-      position:relative;
-      touch-action: pan-y; /* свайп по X работает, вертикальные жесты не ломаем */
-    }
-
-    .slide::before{
-      content:"";
-      position:absolute;
-      inset:-20%;
-      background:radial-gradient(800px 500px at var(--gx,30%) var(--gy,30%),
-        rgba(224,81,136,.22),
-        rgba(224,81,136,.10),
-        transparent 70%);
-      filter:blur(28px);
-      pointer-events:none;
-    }
-
-    .card{
-      width:min(980px,100%);
-      background:linear-gradient(180deg, rgba(224,81,136,.22), rgba(235,208,205,.10));
-      border:1px solid rgba(235,208,205,.28);
-      border-radius:24px;
-      padding:clamp(18px,4vw,44px);
-      box-shadow:0 24px 80px rgba(0,0,0,.25);
-
-      /* чтобы контент не упирался в кнопки/точки снизу */
-      padding-bottom:calc(clamp(18px,4vw,44px) + 70px + var(--safeB));
-    }
-
-    .meta{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      font-size:14px;
-      color:var(--muted);
-      margin-bottom:18px;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .pill{
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(235,208,205,.14);
-      border:1px solid rgba(235,208,205,.26);
-      color:rgba(235,208,205,.92);
-      white-space:nowrap;
-    }
-
-    .title{
-      font-size:clamp(24px,4.8vw,56px);
-      margin:0 0 12px;
-      line-height:1.08;
-      letter-spacing:-.4px;
-      color:rgba(235,208,205,.98);
-      overflow-wrap:anywhere;
-    }
-
-    .big{
-      font-size:clamp(54px,10.5vw,140px);
-      font-weight:800;
-      color:var(--accent);
-      line-height:.95;
-      margin:10px 0 12px;
-      text-shadow:0 10px 30px rgba(227,48,37,.22);
-      overflow-wrap:anywhere;
-    }
-
-    .desc{
-      font-size:clamp(15px,2.4vw,22px);
-      max-width:56ch;
-      color:var(--muted);
-      line-height:1.35;
-      overflow-wrap:anywhere;
-    }
-
-    .card-inner{
-      opacity:0;
-      transform:translateY(10px);
-      transition:.5s ease;
-    }
-    .slide.active .card-inner{
-      opacity:1;
-      transform:none;
-    }
-
-    /* Навигация снизу — учитываем safe-area */
-    .dots{
-      position:absolute;
-      left:50%;
-      bottom:calc(64px + var(--safeB));
-      transform:translateX(-50%);
-      display:flex;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:999px;
-      background:rgba(235,208,205,.12);
-      border:1px solid rgba(235,208,205,.22);
-      backdrop-filter:blur(10px);
-    }
-
-    .dot{
-      width:9px;height:9px;border-radius:50%;
-      background:rgba(235,208,205,.40);
-      cursor:pointer;
-    }
-    .dot.active{
-      background:var(--accent-soft);
-      transform:scale(1.35);
-    }
-
-    .controls{
-      position:absolute;
-      left:50%;
-      transform:translateX(-50%);
-      bottom:calc(14px + var(--safeB));
-      display:flex;
-      gap:10px;
-      z-index:5;
-    }
-
-    .btn{
-      height:48px;
-      min-width:72px;
-      padding:0 14px;
-      border-radius:16px;
-      border:1px solid rgba(235,208,205,.26);
-      background:rgba(235,208,205,.12);
-      color:var(--text);
-      cursor:pointer;
-      font-weight:700;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .btn:disabled{opacity:.4}
-
-    .hint{
-      position:absolute;
-      left:16px;
-      bottom:calc(14px + var(--safeB));
-      font-size:13px;
-      color:rgba(235,208,205,.86);
-      background:rgba(29,85,64,.35);
-      border:1px solid rgba(235,208,205,.22);
-      padding:10px 12px;
-      border-radius:14px;
-      backdrop-filter:blur(10px);
-    }
-
-    /* Мобилки: делаем компактнее и по центру */
-    @media (max-width: 768px){
-      .slide{
-        align-items:flex-start;
-        padding:18px 14px;
-      }
-
-      .card{
-        border-radius:22px;
-      }
-
-      .card-inner{
-        text-align:center;
-      }
-
-      .meta{
-        justify-content:center;
-      }
-
-      .desc{
-        margin:0 auto;
-      }
-
-      .hint{display:none}
-    }
-
-    /* Очень маленькие экраны */
-    @media (max-width: 360px){
-      .pill{font-size:13px}
-      .meta{font-size:13px}
-      .btn{min-width:64px}
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <div class="app">
+  <!-- Story-style progress -->
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
   <div class="track" id="track"></div>
 
-  <div class="hint">Свайпай • ← →</div>
-
+  <div class="hint">Свайпай • Колесико • ← →</div>
   <div class="dots" id="dots"></div>
 
   <div class="controls">
-    <button class="btn" id="prev" aria-label="Предыдущий слайд">←</button>
-    <button class="btn" id="next" aria-label="Следующий слайд">→</button>
+    <button class="btn" id="prev">←</button>
+    <button class="btn" id="next">→</button>
   </div>
 </div>
 
 <script>
-const slides=[
- {pill:"Wrapped 2025",title:"Итоги для тебя",big:"2025",desc:"Немного цифр и немного юмора."},
- {pill:"Wrapped 2025",title:"Бэмби тявкнула",big:"≈ 5",desc:"Но она все равно тебя любит больше всех."},
- {pill:"Wrapped 2025",title:"Слово «какать»",big:"32",desc:"Какали мы по-разному."},
- {pill:"Wrapped 2025",title:"«Что на ужин?»",big:"30",desc:"Главный вопрос года."},
- {pill:"Тайминг",title:"«Я вышел»",big:"29 раз",desc:"Среднее значение."},
- {pill:"Wrapped 2025",title:"«Чмок»",big:"398",desc:"Счетчик почти 400 за всё время, но в реальности хотелось бы в три раза больше."},
- {pill:"Wrapped 2025",title:"Побывали в новых местах...",big:"2 раза",desc:"Москва и Санкт-Петербург."},
- {pill:"Wrapped 2025",title:"Провели вместе",big:"7 200 мин.",desc:"и даже не ругались!"},
- {pill:"Wrapped 2025",title:"Самый спокойный момент",big:"Сон",desc:"Когда мы вместе и я достаю тебя ножкой."},
- {pill:"Wrapped 2025",title:"Лучшее за год",big:"Ты",desc:"Пусть в Новом 2026 году все твои цели сбудутся, а я буду тебя поддерживать."}
+const slides = [
+  {pill:"Wrapped 2025",title:"Итоги для тебя",big:"2025",desc:"Немного цифр и немного юмора."},
+  {pill:"Wrapped 2025",title:"Бэмби тявкнула",big:"≈ 5",desc:"Но она все равно тебя любит больше всех."},
+  {pill:"Wrapped 2025",title:"Слово «какать»",big:"32",desc:"Какали мы по-разному."},
+  {pill:"Wrapped 2025",title:"«Что на ужин?»",big:"30",desc:"Главный вопрос года."},
+  {pill:"Тайминг",title:"«Я вышел»",big:"29 раз",desc:"Среднее значение."},
+  {pill:"Wrapped 2025",title:"«Чмок»",big:"398",desc:"Почти 400 — но хотелось бы больше."},
+  {pill:"Wrapped 2025",title:"Побывали в новых местах",big:"2 раза",desc:"Москва и Санкт-Петербург."},
+  {pill:"Wrapped 2025",title:"Провели вместе",big:"7 200 мин.",desc:"И даже не ругались!"},
+  {pill:"Wrapped 2025",title:"Самый спокойный момент",big:"Сон",desc:"Когда мы вместе."},
+  {pill:"Wrapped 2025",title:"Лучшее за год",big:"Ты",desc:"Пусть 2026 будет ещё лучше ❤️"}
 ];
 
-const track=document.getElementById("track");
-const dots=document.getElementById("dots");
-let index=0;
+const track = document.getElementById("track");
+const dots = document.getElementById("dots");
+const progress = document.getElementById("progress");
 
-slides.forEach((s,i)=>{
-  const slide=document.createElement("section");
-  slide.className="slide";
-  slide.style.setProperty("--gx",`${20+(i*7)%60}%`);
-  slide.style.setProperty("--gy",`${30+(i*9)%50}%`);
-  slide.innerHTML=`
+let index = 0;
+
+/** ===== Render slides ===== */
+slides.forEach((s, i) => {
+  const slide = document.createElement("section");
+  slide.className = "slide";
+  slide.style.setProperty("--gx", `${20 + (i * 7) % 60}%`);
+  slide.style.setProperty("--gy", `${30 + (i * 9) % 50}%`);
+
+  slide.innerHTML = `
     <div class="card">
       <div class="card-inner">
         <div class="meta">
           <div class="pill">✨ ${s.pill}</div>
-          <div>${i+1}/${slides.length}</div>
+          <div>${i + 1}/${slides.length}</div>
         </div>
         <h1 class="title">${s.title}</h1>
         <div class="big">${s.big}</div>
         <p class="desc">${s.desc}</p>
       </div>
-    </div>`;
+    </div>
+  `;
   track.appendChild(slide);
 
-  const dot=document.createElement("div");
-  dot.className="dot";
-  dot.onclick=()=>go(i);
+  const dot = document.createElement("div");
+  dot.className = "dot";
+  dot.onclick = () => go(i, { animate: true });
   dots.appendChild(dot);
 });
 
-function go(i){
-  index=Math.max(0,Math.min(slides.length-1,i));
-  track.style.transform=`translateX(${-index*100}%)`;
-  document.querySelectorAll(".slide").forEach((s,j)=>s.classList.toggle("active",j===index));
-  document.querySelectorAll(".dot").forEach((d,j)=>d.classList.toggle("active",j===index));
-
-  // (необязательно) отключаем стрелки на краях
-  document.getElementById("prev").disabled = index===0;
-  document.getElementById("next").disabled = index===slides.length-1;
-}
-
-document.getElementById("next").onclick=()=>go(index+1);
-document.getElementById("prev").onclick=()=>go(index-1);
-
-window.addEventListener("keydown",e=>{
-  if(e.key==="ArrowRight")go(index+1);
-  if(e.key==="ArrowLeft")go(index-1);
+/** ===== Story progress segments ===== */
+const segs = [];
+slides.forEach((_, i) => {
+  const seg = document.createElement("div");
+  seg.className = "seg";
+  seg.innerHTML = `<div class="fill"></div>`;
+  seg.onclick = () => go(i, { animate: true });
+  progress.appendChild(seg);
+  segs.push(seg);
 });
 
-// свайп
-let startX=0, startY=0;
-window.addEventListener("touchstart",e=>{
-  startX=e.touches[0].clientX;
-  startY=e.touches[0].clientY;
-},{passive:true});
+function setActiveUI(dirClass){
+  document.querySelectorAll(".slide").forEach((s, j) => {
+    s.classList.remove("active", "from-right", "from-left");
+    if (j === index){
+      s.classList.add("active", dirClass);
+    }
+  });
 
-window.addEventListener("touchend",e=>{
-  const dx=e.changedTouches[0].clientX-startX;
-  const dy=e.changedTouches[0].clientY-startY;
-  if(Math.abs(dx)>40 && Math.abs(dx)>Math.abs(dy)) dx<0 ? go(index+1) : go(index-1);
-},{passive:true});
+  document.querySelectorAll(".dot").forEach((d, j) =>
+    d.classList.toggle("active", j === index)
+  );
 
-go(0);
+  // progress fills (past=100%, current=100% unless dragging, future=0)
+  segs.forEach((seg, j) => {
+    const fill = seg.querySelector(".fill");
+    if (j < index) fill.style.transform = "scaleX(1)";
+    else if (j > index) fill.style.transform = "scaleX(0)";
+    else fill.style.transform = "scaleX(1)";
+  });
+}
+
+function setTrackPx(px, { animate } = { animate: true }){
+  track.classList.toggle("no-anim", !animate);
+  track.style.transform = `translate3d(${px}px,0,0)`;
+}
+
+function slideWidth(){
+  return track.getBoundingClientRect().width; // equals viewport width
+}
+
+function baseXForIndex(i){
+  return -i * slideWidth();
+}
+
+/**
+ * Update story progress during drag
+ * dragX is px offset from base position (negative means dragging to next)
+ */
+function setProgressDuringDrag(dragX){
+  const w = slideWidth();
+  if (!w) return;
+
+  // fraction: -1..1 (clamp)
+  const f = Math.max(-1, Math.min(1, dragX / w));
+
+  // When dragging left (f < 0): moving towards next slide (index+1)
+  // current segment should "empty" a bit; next should "fill" a bit
+  const cur = segs[index]?.querySelector(".fill");
+  const next = segs[index + 1]?.querySelector(".fill");
+  const prev = segs[index - 1]?.querySelector(".fill");
+
+  // reset all to their base state first
+  segs.forEach((seg, j) => {
+    const fill = seg.querySelector(".fill");
+    if (j < index) fill.style.transform = "scaleX(1)";
+    else if (j > index) fill.style.transform = "scaleX(0)";
+    else fill.style.transform = "scaleX(1)";
+  });
+
+  if (f < 0 && next){
+    const t = Math.min(1, Math.max(0, -f)); // 0..1
+    cur.style.transform = `scaleX(${1 - t})`;
+    next.style.transform = `scaleX(${t})`;
+  } else if (f > 0 && prev){
+    const t = Math.min(1, Math.max(0, f)); // 0..1
+    // dragging right towards prev: prev fills, current empties
+    prev.style.transform = `scaleX(${1})`; // prev already full
+    cur.style.transform = `scaleX(${1 - t})`;
+  }
+}
+
+function go(i, { animate = true } = {}){
+  const prevIndex = index;
+  index = Math.max(0, Math.min(slides.length - 1, i));
+  const dir = index > prevIndex ? "from-right" : "from-left";
+
+  setTrackPx(baseXForIndex(index), { animate });
+  setActiveUI(dir);
+}
+
+/** ===== Controls ===== */
+document.getElementById("next").onclick = () => go(index + 1, { animate: true });
+document.getElementById("prev").onclick = () => go(index - 1, { animate: true });
+
+window.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight") go(index + 1, { animate: true });
+  if (e.key === "ArrowLeft") go(index - 1, { animate: true });
+});
+
+/** ===== Inertial swipe (drag + velocity + snap) ===== */
+let isDragging = false;
+let startX = 0;
+let startBase = 0;
+let lastX = 0;
+let lastT = 0;
+let vx = 0; // px/ms
+let activePointerId = null;
+
+function clampX(x){
+  // rubber band at edges
+  const min = baseXForIndex(slides.length - 1);
+  const max = baseXForIndex(0);
+  if (x < min) return min + (x - min) * 0.25;
+  if (x > max) return max + (x - max) * 0.25;
+  return x;
+}
+
+function onDown(clientX, pointerId){
+  if (activePointerId !== null) return;
+  activePointerId = pointerId ?? "touch";
+  isDragging = true;
+
+  startX = clientX;
+  startBase = baseXForIndex(index);
+
+  lastX = clientX;
+  lastT = performance.now();
+  vx = 0;
+
+  // turn off animation for direct follow
+  track.classList.add("grabbing");
+  track.classList.add("no-anim");
+}
+
+function onMove(clientX){
+  if (!isDragging) return;
+
+  const now = performance.now();
+  const dx = clientX - startX;
+  const target = clampX(startBase + dx);
+
+  setTrackPx(target, { animate: false });
+  setProgressDuringDrag(dx);
+
+  // velocity
+  const dt = now - lastT;
+  if (dt > 0){
+    const v = (clientX - lastX) / dt;
+    // smooth a bit
+    vx = vx * 0.75 + v * 0.25;
+    lastX = clientX;
+    lastT = now;
+  }
+}
+
+function onUp(clientX){
+  if (!isDragging) return;
+
+  isDragging = false;
+  track.classList.remove("grabbing");
+
+  const w = slideWidth();
+  const dx = clientX - startX;
+
+  // Decision:
+  // - if fast enough: use velocity
+  // - else use distance threshold
+  const velocityThreshold = 0.6; // px/ms
+  const distanceThreshold = w * 0.18;
+
+  let targetIndex = index;
+
+  if (Math.abs(vx) > velocityThreshold){
+    // swipe right -> previous
+    targetIndex = vx > 0 ? index - 1 : index + 1;
+  } else if (Math.abs(dx) > distanceThreshold){
+    targetIndex = dx > 0 ? index - 1 : index + 1;
+  }
+
+  targetIndex = Math.max(0, Math.min(slides.length - 1, targetIndex));
+
+  // restore animation
+  track.classList.remove("no-anim");
+  go(targetIndex, { animate: true });
+
+  activePointerId = null;
+}
+
+/** Pointer events (best) */
+window.addEventListener("pointerdown", (e) => {
+  // only primary buttons/touch
+  if (e.pointerType === "mouse" && e.button !== 0) return;
+  onDown(e.clientX, e.pointerId);
+}, { passive: true });
+
+window.addEventListener("pointermove", (e) => {
+  if (activePointerId !== e.pointerId) return;
+  onMove(e.clientX);
+}, { passive: true });
+
+window.addEventListener("pointerup", (e) => {
+  if (activePointerId !== e.pointerId) return;
+  onUp(e.clientX);
+}, { passive: true });
+
+window.addEventListener("pointercancel", (e) => {
+  if (activePointerId !== e.pointerId) return;
+  onUp(e.clientX);
+}, { passive: true });
+
+/** Re-snap on resize */
+window.addEventListener("resize", () => {
+  setTrackPx(baseXForIndex(index), { animate: false });
+  setActiveUI("from-right");
+});
+
+/** Init */
+go(0, { animate: false });
 </script>
 
 </body>
