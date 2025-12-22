@@ -33,7 +33,7 @@ body{ overflow:hidden; }
   background-image:url("./Pat_1.svg");
   background-repeat:repeat;
   background-position:0 0;
-  background-size:300px 300px;
+  background-size:220px 220px;
 
   touch-action:none;
 }
