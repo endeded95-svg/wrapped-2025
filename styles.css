@@ -30,10 +30,10 @@ body{ overflow:hidden; }
   height:100dvh;
 
   background-color:var(--bg);
-  background-image:url("./Pat.svg");
+  background-image:url("./Pat_1.svg");
   background-repeat:repeat;
   background-position:0 0;
-  background-size:80px 80px;
+  background-size:300px 300px;
 
   touch-action:none;
 }
