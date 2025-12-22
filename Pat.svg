@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_Слой_2" data-name="Слой 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 282.05 291.02">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #e33025;
+      }
+
+      .cls-2 {
+        fill: #e05188;
+      }
+
+      .cls-3 {
+        fill: url(#_Безымянный_градиент_207);
+      }
+
+      .cls-4 {
+        fill: url(#_Безымянный_градиент_213);
+      }
+
+      .cls-5 {
+        fill: #1d5540;
+      }
+
+      .cls-6 {
+        fill: #f2cecb;
+      }
+    </style>
+    <linearGradient id="_Безымянный_градиент_207" data-name="Безымянный градиент 207" x1="-218.87" y1="-1090.66" x2="-116.69" y2="-1090.66" gradientTransform="translate(1160.46 51.19) rotate(-90)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#f2cecb"/>
+    </linearGradient>
+    <linearGradient id="_Безымянный_градиент_213" data-name="Безымянный градиент 213" x1="-75.85" y1="-948.23" x2="34.15" y2="-948.23" gradientTransform="translate(1160.46 51.19) rotate(-90)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e33025"/>
+      <stop offset="1" stop-color="#e33025" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <g id="_Слой_1-2" data-name="Слой 1">
+    <rect class="cls-5" y="0" width="281.96" height="291.02"/>
+    <rect class="cls-1" x="0" y="146.93" width="139.61" height="144.09"/>
+    <rect class="cls-2" x="0" width="139.61" height="144.09"/>
+    <rect class="cls-5" x="142.44" y="146.93" width="139.61" height="144.09"/>
+    <rect class="cls-6" x="142.44" width="139.61" height="144.09"/>
+    <polygon class="cls-3" points="18.71 218.98 51.77 211.51 33.68 182.85 62.34 200.95 69.8 167.89 77.27 200.95 105.93 182.85 87.83 211.51 120.89 218.98 87.83 226.44 105.93 255.1 77.27 237.01 69.8 270.07 62.34 237.01 33.68 255.1 51.77 226.44 18.71 218.98"/>
+    <path class="cls-4" d="M157.23,72.05h0c29.95-1.01,53.99-25.05,55-55h0s0,0,0,0c1.01,29.95,25.05,53.99,55,55h0s0,0,0,0c-29.95,1.01-53.99,25.05-55,55h0s0,0,0,0c-1.01-29.95-25.05-53.99-55-55h0Z"/>
+  </g>
+</svg>
