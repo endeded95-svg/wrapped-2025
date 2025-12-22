@@ -36,6 +36,12 @@ body{ overflow:hidden; }
   background-size:220px 220px;
 
   touch-action:none;
+    animation: bgScroll 18s linear infinite;
+}
+
+@keyframes bgScroll{
+  from { background-position: 0 0; }
+  to   { background-position: 0 -288px; } /* важно: = высоте тайла из viewBox */
 }
 
 /* Верхний story progress */
