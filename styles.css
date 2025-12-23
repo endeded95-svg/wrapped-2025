@@ -202,14 +202,14 @@ body{
 .big{
   margin:10px 0;
   line-height:.95;
-  font-weight:500;
+  font-weight:700;
   color:var(--red);
-  font-size:clamp(64px, 18vw, 120px);
+  font-size:clamp(64px, 18vw, 96px);
   letter-spacing:-0.02em;
 }
 
 @media (max-width:768px){
-  .big{ font-size:clamp(56px, 20vw, 96px); }
+  .big{ font-size:clamp(56px, 20vw, 64px); }
 }
 
 .desc{
