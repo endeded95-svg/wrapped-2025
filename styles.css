@@ -23,10 +23,7 @@ html,body{
   height:100%;
   background:var(--bg);
   color:var(--text);
-  font-family: "Unbounded", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal;
+  font-family: "Unbounded", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
 }
 }
 
