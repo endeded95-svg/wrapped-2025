@@ -436,3 +436,21 @@ body.is-loading .app{
   -webkit-transform: translateZ(0);      /* помогает Safari */
   transform: translateZ(0);
 }
+/* ===== LOADER CARD PULSE ===== */
+body.is-loading #loaderCard{
+  animation: loaderPulse 1.6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes loaderPulse{
+  0%{
+    transform: scale(1);
+  }
+  50%{
+    transform: scale(1.035);
+  }
+  100%{
+    transform: scale(1);
+  }
+}
+
