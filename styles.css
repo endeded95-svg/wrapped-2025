@@ -449,41 +449,36 @@ body.is-loading #loaderCard{
   50%{ transform:scale(1.035); }
   100%{ transform:scale(1); }
 }
-/* ===== PROGRESS MOBILE FIX: без "зазоров" и разной длины ===== */
+/* ===== iOS FIX: прогресс без "кривых" зазоров ===== */
 .progress{
   display:flex;
-  gap:0 !important;                 /* убираем дробные gap */
+  gap:0 !important;
   padding:10px 12px;
   align-items:center;
+  background:var(--panel); /* важно: совпадает с разделителями */
 }
 
 .seg{
   flex:1 1 0;
   min-width:0;
   height:6px;
-  border-radius:0;                  /* склеиваем, скруглим только края контейнера */
-  border:0;
   padding:0;
   margin:0;
+  border:0;
+  border-radius:0;
   overflow:hidden;
 
-  /* цвет фона сегмента */
   background:var(--muted);
 
-  /* разделители вместо gap */
-  border-left:8px solid transparent; /* "разрыв" одинаковый */
+  /* ВАЖНО: разделитель цветом панели, НЕ transparent */
+  border-left:8px solid var(--panel);
   background-clip:padding-box;
 
   appearance:none;
   -webkit-appearance:none;
 }
 
-/* убираем разделитель у первого */
-.seg:first-child{
-  border-left:0;
-}
-
-/* скругляем только крайние сегменты */
+.seg:first-child{ border-left:0; }
 .seg:first-child{ border-top-left-radius:999px; border-bottom-left-radius:999px; }
 .seg:last-child{  border-top-right-radius:999px; border-bottom-right-radius:999px; }
 
@@ -496,4 +491,7 @@ body.is-loading #loaderCard{
   transition:transform .22s linear;
   will-change:transform;
 }
+
+/* опционально: убираем iOS tap-highlight */
+.seg{ -webkit-tap-highlight-color: transparent; }
 
