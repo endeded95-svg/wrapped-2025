@@ -281,5 +281,36 @@
     }, 6000);
   });
 </script>
+  <script>
+  document.body.classList.add("is-loading");
+
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      const loader = document.getElementById("loader");
+      if (loader) loader.remove();
+      document.body.classList.remove("is-loading");
+
+      // 🎉 CONFETTI START
+      launchConfetti();
+    }, 6000);
+  });
+
+  function launchConfetti(){
+    const wrap = document.getElementById("confetti");
+    const colors = ["#e33025","#e05188","#f2cecb"];
+
+    for(let i=0;i<80;i++){
+      const c = document.createElement("div");
+      c.className = "confetti";
+      c.style.left = Math.random()*100 + "vw";
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      c.style.animationDuration = 2 + Math.random()*2 + "s";
+      c.style.transform = `rotate(${Math.random()*360}deg)`;
+      wrap.appendChild(c);
+
+      setTimeout(() => c.remove(), 4000);
+    }
+  }
+</script>
 </body>
 </html>
