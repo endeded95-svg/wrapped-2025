@@ -23,12 +23,10 @@ html,body{
   height:100%;
   background:var(--bg);
   color:var(--text);
-  font-family: "Unbounded", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  font-family:"Unbounded", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
 }
 
-body{
-  overflow:hidden;
-}
+body{ overflow:hidden; }
 
 /* =====================
    APP + BACKGROUND
@@ -47,11 +45,20 @@ body{
   animation:bgScroll 18s linear infinite;
 }
 
+/* важно: бесконечный тайл — смещение на высоту тайла */
 @keyframes bgScroll{
-  from { background-position:0 0; }
-  to   { background-position:0 -220px; }
+  from{ background-position:0 0; }
+  to{   background-position:0 -220px; }
 }
-/* ===== CONFETTI ===== */
+
+/* ✅ чтобы вертикальные жесты не “цепляли” слайды на мобилке */
+.app, .track{
+  touch-action: pan-y;
+}
+
+/* =====================
+   CONFETTI
+===================== */
 #confetti{
   position:fixed;
   inset:0;
@@ -75,6 +82,7 @@ body{
     opacity:0;
   }
 }
+
 /* =====================
    STORY PROGRESS
 ===================== */
@@ -185,23 +193,23 @@ body{
 .big{
   margin:10px 0;
   line-height:.95;
-  font-weight:700;                 /* было 800 — слишком тяжело */
+  font-weight:700;
   color:var(--red);
+  font-size:clamp(64px, 18vw, 120px);
+  letter-spacing:-0.02em;
+}
 
-  font-size:clamp(64px, 18vw, 120px); /* ↓ было слишком агрессивно */
-  letter-spacing:-0.02em;           /* аккуратнее для Unbounded */
-}
 @media (max-width:768px){
-  .big{
-    font-size:clamp(56px, 20vw, 96px);
-  }
+  .big{ font-size:clamp(56px, 20vw, 96px); }
 }
+
 .desc{
   margin:0;
   color:var(--muted);
   max-width:52ch;
   font-size:clamp(15px, 4.2vw, 20px);
 }
+
 /* =====================
    DOTS (DESKTOP)
 ===================== */
@@ -279,13 +287,8 @@ body{
    MOBILE OVERRIDES
 ===================== */
 @media (max-width:768px){
+  .dots{ display:none; }
 
-  /* убрать точки */
-  .dots{
-    display:none;
-  }
-
-  /* стрелки по центру */
   .controls{
     left:50%;
     right:auto;
@@ -322,6 +325,16 @@ body.is-loading .app{
   background:rgba(255,255,255,.85);
   border:2px solid var(--border);
   border-radius:22px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+}
+
+#loaderPercent,
+#loaderText{
+  width:100%;
 }
 
 #loaderPercent::before{
@@ -343,7 +356,7 @@ body.is-loading .app{
   animation:textSteps6 6s linear forwards, textFade6 6s linear forwards;
 }
 
-/* loader animations */
+/* проценты */
 @keyframes percentSteps6{
   0%{content:"0%";}
   10%{content:"10%";}
@@ -354,6 +367,7 @@ body.is-loading .app{
   100%{content:"100%";}
 }
 
+/* тексты */
 @keyframes textSteps6{
   0%{content:"Готовлю магию…";}
   10%{content:"Вау, сейчас что-то будет";}
@@ -380,52 +394,8 @@ body.is-loading .app{
   92%{opacity:1;} 98%{opacity:.2;}
   100%{opacity:0;}
 }
-/* ===== LOADER RING ===== */
-.loader-ring{
-  width:48px;
-  height:48px;
-  margin:18px auto 0;
 
-  border-radius:50%;
-  border:4px solid rgba(29,85,64,.15); /* мягкий фон */
-  border-top-color: var(--red, #e33025);
-
-  animation: loaderSpin 1s linear infinite;
-}
-
-@keyframes loaderSpin{
-  to{ transform:rotate(360deg); }
-}
-/* fix: чтобы ring точно был видим и ниже текста */
-#loaderCard{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-
-#loaderPercent,
-#loaderText{
-  width:100%;
-}
-
-/* усилить контраст кольца */
-.loader-ring{
-  border:4px solid rgba(29,85,64,.28);
-  border-top-color: var(--red);
-}
-/* ==== FORCE LOADER RING VISIBLE (iPhone fix) ==== */
-#loaderCard{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:14px;
-}
-
-#loaderPercent,
-#loaderText{
-  width:100%;
-}
-
+/* loader ring */
 .loader-ring{
   display:block;
   width:52px;
@@ -433,28 +403,26 @@ body.is-loading .app{
   margin:6px 0 0;
 
   border-radius:50%;
-  border:4px solid rgba(29,85,64,.35);   /* было слишком прозрачно */
+  border:4px solid rgba(29,85,64,.35);
   border-top-color: var(--red);
 
   animation: loaderSpin .9s linear infinite;
-  -webkit-transform: translateZ(0);      /* помогает Safari */
+  -webkit-transform: translateZ(0);
   transform: translateZ(0);
 }
-/* ===== LOADER CARD PULSE ===== */
+
+@keyframes loaderSpin{
+  to{ transform:rotate(360deg); }
+}
+
+/* loader pulse */
 body.is-loading #loaderCard{
   animation: loaderPulse 1.6s ease-in-out infinite;
-  transform-origin: center;
+  transform-origin:center;
 }
 
 @keyframes loaderPulse{
-  0%{
-    transform: scale(1);
-  }
-  50%{
-    transform: scale(1.035);
-  }
-  100%{
-    transform: scale(1);
-  }
+  0%{ transform:scale(1); }
+  50%{ transform:scale(1.035); }
+  100%{ transform:scale(1); }
 }
-
