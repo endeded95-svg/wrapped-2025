@@ -14,20 +14,6 @@
     <div id="loaderText"></div>
   </div>
 </div>
-
-<script>
-  // PRELOADER: включаем гарантированно и одинаково на desktop/mobile
-  window.addEventListener("DOMContentLoaded", () => {
-    document.body.classList.add("is-loading");
-
-    setTimeout(() => {
-      const loader = document.getElementById("loader");
-      if (loader) loader.remove(); // физически убрать, чтобы не перекрывал
-      document.body.classList.remove("is-loading");
-    }, 6000);
-  });
-</script>
-
 <div class="app">
   <div class="progress" id="progress" aria-hidden="true"></div>
   <div class="track" id="track"></div>
@@ -281,6 +267,18 @@
   requestAnimationFrame(() => go(0, { animate: false }));
 })();
 </script>
+<script>
+  // PRELOADER: надежно показывает оверлей и на desktop, и на mobile
+  document.body.classList.add("is-loading");
 
+  // даем браузеру 1 кадр на отрисовку loader (важно для desktop)
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      const loader = document.getElementById("loader");
+      if (loader) loader.remove();
+      document.body.classList.remove("is-loading");
+    }, 6000);
+  });
+</script>
 </body>
 </html>
