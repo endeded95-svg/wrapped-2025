@@ -50,7 +50,7 @@ body{
 
 @keyframes bgScroll{
   from { background-position:0 0; }
-  to   { background-position:0 -288px; }
+  to   { background-position:0 -220px; }
 }
 
 /* =====================
