@@ -7,15 +7,29 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="loader">
+
+<div id="loader">
   <div id="loaderCard">
     <div id="loaderPercent"></div>
     <div id="loaderText"></div>
   </div>
 </div>
+
+<script>
+  // PRELOADER: включаем гарантированно и одинаково на desktop/mobile
+  window.addEventListener("DOMContentLoaded", () => {
+    document.body.classList.add("is-loading");
+
+    setTimeout(() => {
+      const loader = document.getElementById("loader");
+      if (loader) loader.remove(); // физически убрать, чтобы не перекрывал
+      document.body.classList.remove("is-loading");
+    }, 6000);
+  });
+</script>
+
 <div class="app">
   <div class="progress" id="progress" aria-hidden="true"></div>
-
   <div class="track" id="track"></div>
 
   <div class="hint">Просто листай вправо</div>
@@ -49,7 +63,6 @@
 
   let index = 0;
 
-  // ===== Render slides =====
   slides.forEach((s, i) => {
     const slide = document.createElement("section");
     slide.className = "slide";
@@ -74,7 +87,6 @@
     dots.appendChild(dot);
   });
 
-  // ===== Progress segments =====
   const segs = [];
   slides.forEach((_, i) => {
     const seg = document.createElement("div");
@@ -86,7 +98,7 @@
   });
 
   function slideWidth(){
-    return app.clientWidth; // ВАЖНО: ширина одного экрана, а не ширина track
+    return app.clientWidth;
   }
 
   function baseXForIndex(i){
@@ -125,7 +137,6 @@
     const next = segs[index + 1]?.querySelector(".fill");
     const prev = segs[index - 1]?.querySelector(".fill");
 
-    // base state
     segs.forEach((seg, j) => {
       const fill = seg.querySelector(".fill");
       if (j < index) fill.style.transform = "scaleX(1)";
@@ -152,7 +163,6 @@
     setActiveUI(dir);
   }
 
-  // ===== Controls =====
   document.getElementById("next").addEventListener("click", () => go(index + 1, { animate: true }));
   document.getElementById("prev").addEventListener("click", () => go(index - 1, { animate: true }));
 
@@ -161,7 +171,6 @@
     if (e.key === "ArrowLeft") go(index - 1, { animate: true });
   });
 
-  // ===== Inertial swipe =====
   let isDragging = false;
   let startX = 0;
   let startBase = 0;
@@ -238,45 +247,40 @@
     activePointerId = null;
   }
 
+  // На десктопе лучше не passive, чтобы избежать выделения/драг-эффектов
   window.addEventListener("pointerdown", (e) => {
     if (e.pointerType === "mouse" && e.button !== 0) return;
+    e.preventDefault();
     onDown(e.clientX, e.pointerId);
-  }, { passive: true });
+  }, { passive: false });
 
   window.addEventListener("pointermove", (e) => {
     if (activePointerId !== e.pointerId) return;
+    e.preventDefault();
     onMove(e.clientX);
-  }, { passive: true });
+  }, { passive: false });
 
   window.addEventListener("pointerup", (e) => {
     if (activePointerId !== e.pointerId) return;
+    e.preventDefault();
     onUp(e.clientX);
-  }, { passive: true });
+  }, { passive: false });
 
   window.addEventListener("pointercancel", (e) => {
     if (activePointerId !== e.pointerId) return;
+    e.preventDefault();
     onUp(e.clientX);
-  }, { passive: true });
+  }, { passive: false });
 
-  // Re-snap on resize (orientation change etc.)
   window.addEventListener("resize", () => {
     setTrackPx(baseXForIndex(index), false);
     setActiveUI("from-right");
   });
 
-  // Init: iOS can lay out twice, so re-snap on next frame
   go(0, { animate: false });
   requestAnimationFrame(() => go(0, { animate: false }));
 })();
 </script>
-<script>
-  document.body.classList.add("is-loading");
 
-  setTimeout(() => {
-    const loader = document.getElementById("loader");
-    if (loader) loader.remove();
-    document.body.classList.remove("is-loading");
-  }, 6000);
-</script>
 </body>
 </html>
