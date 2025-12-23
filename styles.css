@@ -13,23 +13,20 @@
   --muted:#dba3ab;
 }
 
+/* =====================
+   RESET / BASE
+===================== */
 *{ box-sizing:border-box; }
 
-/* =====================
-   BASE
-===================== */
 html,body{
   margin:0;
   height:100%;
   background:var(--bg);
   color:var(--text);
   font-family:"Unbounded", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-  -webkit-text-size-adjust:100%;
 }
 
-body{
-  overflow:hidden;
-}
+body{ overflow:hidden; }
 
 /* =====================
    APP + BACKGROUND
@@ -38,26 +35,18 @@ body{
   position:relative;
   height:100vh;
   height:100dvh;
-  overflow:hidden;
 
   background-color:var(--bg);
   background-image:url("./Pat_1.svg");
   background-repeat:repeat;
-  background-position:0 0;
   background-size:220px 220px;
 
   animation:bgScroll 18s linear infinite;
 }
 
-/* бесконечный тайл — смещение на высоту тайла */
 @keyframes bgScroll{
   from{ background-position:0 0; }
-  to{   background-position:0 -220px; }
-}
-
-/* вертикальные жесты — ок, горизонтальные обрабатывает JS */
-.app, .track{
-  touch-action: pan-y;
+  to{ background-position:0 -220px; }
 }
 
 /* =====================
@@ -68,7 +57,7 @@ body{
   inset:0;
   pointer-events:none;
   overflow:hidden;
-  z-index:999999;
+  z-index:9999;
 }
 
 .confetti{
@@ -96,8 +85,8 @@ body{
   right:16px;
   top:calc(12px + env(safe-area-inset-top));
   display:flex;
-  gap:8px;
-  padding:10px;
+  gap:6px;
+  padding:8px;
   background:var(--panel);
   border:2px solid var(--border);
   border-radius:999px;
@@ -110,11 +99,6 @@ body{
   background:var(--muted);
   border-radius:999px;
   overflow:hidden;
-  border:0;
-  padding:0;
-  cursor:pointer;
-  appearance:none;
-  -webkit-appearance:none;
 }
 
 .seg .fill{
@@ -132,8 +116,8 @@ body{
 .track{
   display:flex;
   height:100%;
-  will-change:transform;
   transition:transform .6s cubic-bezier(.18,.95,.22,1);
+  will-change:transform;
 }
 
 .track.no-anim{ transition:none; }
@@ -196,34 +180,26 @@ body{
 .title{
   margin:0 0 10px;
   line-height:1.05;
-  font-size:clamp(26px, 6vw, 48px);
+  font-size:clamp(24px, 5.5vw, 42px);
 }
 
+/* 🔴 КРАСНЫЕ ЦИФРЫ — УМЕНЬШЕНЫ (ВАРИАНТ 2) */
 .big{
-  margin:10px auto;
+  margin:10px 0;
   line-height:.95;
   font-weight:700;
   color:var(--red);
   letter-spacing:-0.02em;
   text-align:center;
 
-  /* базовый размер */
   font-size:clamp(48px, 13vw, 88px);
-
-  /* магия */
-  max-width: 10ch;
-}
-
-/* если строка длиннее — Safari сам ужмёт */
-.big{
-  text-wrap:balance;
 }
 
 @media (max-width:768px){
   .big{
     font-size:clamp(40px, 12vw, 74px);
-    max-width: 9ch;
   }
+}
 
 .desc{
   margin:0;
@@ -254,12 +230,6 @@ body{
   height:8px;
   border-radius:50%;
   background:var(--muted);
-  cursor:pointer;
-
-  border:0;
-  padding:0;
-  appearance:none;
-  -webkit-appearance:none;
 }
 
 .dot.active{
@@ -288,12 +258,6 @@ body{
   background:var(--panel);
   color:var(--text);
   font-weight:700;
-  cursor:pointer;
-}
-
-.btn:disabled{
-  opacity:.45;
-  cursor:default;
 }
 
 /* =====================
@@ -305,7 +269,6 @@ body{
   bottom:calc(16px + env(safe-area-inset-bottom));
   background:var(--panel);
   border:2px solid var(--border);
-  color:var(--text);
   padding:10px 12px;
   border-radius:14px;
   font-size:13px;
@@ -342,11 +305,10 @@ body.is-loading .app{
 #loader{
   position:fixed;
   inset:0;
-  z-index:2147483647;
+  z-index:99999;
   display:grid;
   place-items:center;
   background:rgba(255,255,255,.55);
-  -webkit-backdrop-filter:blur(10px);
   backdrop-filter:blur(10px);
 }
 
@@ -364,31 +326,47 @@ body.is-loading .app{
   gap:14px;
 }
 
-#loaderPercent,
-#loaderText{
-  width:100%;
-}
-
 #loaderPercent::before{
   content:"0%";
-  display:block;
   font-size:44px;
   font-weight:800;
-  margin-bottom:10px;
   color:var(--red);
   animation:percentSteps6 6s linear forwards, percentFade6 6s linear forwards;
 }
 
 #loaderText::before{
   content:"Готовлю магию…";
-  display:block;
   font-size:16px;
   font-weight:700;
   color:#1d5540;
   animation:textSteps6 6s linear forwards, textFade6 6s linear forwards;
 }
 
-/* проценты */
+/* loader ring */
+.loader-ring{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  border:4px solid rgba(29,85,64,.35);
+  border-top-color:var(--red);
+  animation:loaderSpin .9s linear infinite;
+}
+
+@keyframes loaderSpin{
+  to{ transform:rotate(360deg); }
+}
+
+body.is-loading #loaderCard{
+  animation:loaderPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes loaderPulse{
+  0%{ transform:scale(1); }
+  50%{ transform:scale(1.035); }
+  100%{ transform:scale(1); }
+}
+
+/* percent / text animations */
 @keyframes percentSteps6{
   0%{content:"0%";}
   10%{content:"10%";}
@@ -399,7 +377,6 @@ body.is-loading .app{
   100%{content:"100%";}
 }
 
-/* тексты */
 @keyframes textSteps6{
   0%{content:"Готовлю магию…";}
   10%{content:"Вау, сейчас что-то будет";}
@@ -430,81 +407,3 @@ body.is-loading .app{
   98%{opacity:.2;}
   100%{opacity:0;}
 }
-
-/* loader ring */
-.loader-ring{
-  display:block;
-  width:52px;
-  height:52px;
-  margin:6px 0 0;
-
-  border-radius:50%;
-  border:4px solid rgba(29,85,64,.35);
-  border-top-color: var(--red);
-
-  will-change: transform;
-  animation: loaderSpin .9s linear infinite;
-}
-
-@keyframes loaderSpin{
-  from{ transform: translateZ(0) rotate(0deg); }
-  to{   transform: translateZ(0) rotate(360deg); }
-}
-
-/* loader pulse */
-body.is-loading #loaderCard{
-  animation: loaderPulse 1.6s ease-in-out infinite;
-  transform-origin:center;
-}
-
-@keyframes loaderPulse{
-  0%{ transform:scale(1); }
-  50%{ transform:scale(1.035); }
-  100%{ transform:scale(1); }
-}
-/* ===== iOS FIX: прогресс без "кривых" зазоров ===== */
-.progress{
-  display:flex;
-  gap:0 !important;
-  padding:10px 12px;
-  align-items:center;
-  background:var(--panel); /* важно: совпадает с разделителями */
-}
-
-.seg{
-  flex:1 1 0;
-  min-width:0;
-  height:6px;
-  padding:0;
-  margin:0;
-  border:0;
-  border-radius:0;
-  overflow:hidden;
-
-  background:var(--muted);
-
-  /* ВАЖНО: разделитель цветом панели, НЕ transparent */
-  border-left:8px solid var(--panel);
-  background-clip:padding-box;
-
-  appearance:none;
-  -webkit-appearance:none;
-}
-
-.seg:first-child{ border-left:0; }
-.seg:first-child{ border-top-left-radius:999px; border-bottom-left-radius:999px; }
-.seg:last-child{  border-top-right-radius:999px; border-bottom-right-radius:999px; }
-
-.seg .fill{
-  width:100%;
-  height:100%;
-  background:var(--text);
-  transform-origin:left center;
-  transform:scaleX(0);
-  transition:transform .22s linear;
-  will-change:transform;
-}
-
-/* опционально: убираем iOS tap-highlight */
-.seg{ -webkit-tap-highlight-color: transparent; }
-
