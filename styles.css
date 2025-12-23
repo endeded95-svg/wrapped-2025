@@ -186,9 +186,11 @@ body{
 .big{
   margin:10px 0;
   line-height:.95;
-  font-weight:800;
+  font-weight:700;                 /* было 800 — слишком тяжело */
   color:var(--red);
-  font-size:clamp(78px, 24vw, 150px);
+
+  font-size:clamp(64px, 18vw, 120px); /* ↓ было слишком агрессивно */
+  letter-spacing:-0.02em;           /* аккуратнее для Unbounded */
 }
 
 .desc{
