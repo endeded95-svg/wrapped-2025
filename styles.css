@@ -208,7 +208,7 @@ body{
   text-align:center;
 
   /* базовый размер */
-  font-size:clamp(56px, 16vw, 110px);
+  font-size:clamp(48px, 13vw, 88px);
 
   /* магия */
   max-width: 10ch;
@@ -221,7 +221,7 @@ body{
 
 @media (max-width:768px){
   .big{
-    font-size:clamp(48px, 18vw, 88px);
+    font-size:clamp(40px, 12vw, 74px);
     max-width: 9ch;
   }
 
