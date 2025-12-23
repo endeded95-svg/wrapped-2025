@@ -64,8 +64,8 @@ body{
 .confetti{
   position:absolute;
   top:-10px;
-  width:8px;
-  height:14px;
+  width:12px;
+  height:18px;
   opacity:.9;
   animation:fall linear forwards;
 }
