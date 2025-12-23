@@ -14,7 +14,7 @@
 }
 
 /* =====================
-   RESET / BASE
+   BASE
 ===================== */
 *{ box-sizing:border-box; }
 
@@ -24,6 +24,7 @@ html,body{
   background:var(--bg);
   color:var(--text);
   font-family:"Unbounded", system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  -webkit-text-size-adjust:100%;
 }
 
 body{ overflow:hidden; }
@@ -39,6 +40,7 @@ body{ overflow:hidden; }
   background-color:var(--bg);
   background-image:url("./Pat_1.svg");
   background-repeat:repeat;
+  background-position:0 0;
   background-size:220px 220px;
 
   animation:bgScroll 18s linear infinite;
@@ -46,7 +48,7 @@ body{ overflow:hidden; }
 
 @keyframes bgScroll{
   from{ background-position:0 0; }
-  to{ background-position:0 -220px; }
+  to{   background-position:0 -220px; }
 }
 
 /* =====================
@@ -57,7 +59,7 @@ body{ overflow:hidden; }
   inset:0;
   pointer-events:none;
   overflow:hidden;
-  z-index:9999;
+  z-index:999999;
 }
 
 .confetti{
@@ -77,7 +79,7 @@ body{ overflow:hidden; }
 }
 
 /* =====================
-   STORY PROGRESS
+   STORY PROGRESS (НЕ МЕНЯЕМ ДИЗАЙН)
 ===================== */
 .progress{
   position:absolute;
@@ -85,8 +87,8 @@ body{ overflow:hidden; }
   right:16px;
   top:calc(12px + env(safe-area-inset-top));
   display:flex;
-  gap:6px;
-  padding:8px;
+  gap:8px;
+  padding:10px;
   background:var(--panel);
   border:2px solid var(--border);
   border-radius:999px;
@@ -94,7 +96,10 @@ body{ overflow:hidden; }
 }
 
 .seg{
-  flex:1;
+  /* iOS FIX: равная длина сегментов без артефактов */
+  flex:1 1 0;
+  min-width:0;
+
   height:4px;
   background:var(--muted);
   border-radius:999px;
@@ -108,6 +113,7 @@ body{ overflow:hidden; }
   transform-origin:left;
   transform:scaleX(0);
   transition:transform .25s ease;
+  will-change:transform;
 }
 
 /* =====================
@@ -116,8 +122,8 @@ body{ overflow:hidden; }
 .track{
   display:flex;
   height:100%;
-  transition:transform .6s cubic-bezier(.18,.95,.22,1);
   will-change:transform;
+  transition:transform .6s cubic-bezier(.18,.95,.22,1);
 }
 
 .track.no-anim{ transition:none; }
@@ -180,18 +186,21 @@ body{ overflow:hidden; }
 .title{
   margin:0 0 10px;
   line-height:1.05;
-  font-size:clamp(24px, 5.5vw, 42px);
+  font-size:clamp(26px, 6vw, 48px);
 }
 
-/* 🔴 КРАСНЫЕ ЦИФРЫ — УМЕНЬШЕНЫ (ВАРИАНТ 2) */
+/* ✅ ЦИФРЫ МЕНЬШЕ (ВАРИАНТ 2) + НЕ ПО ЦЕНТРУ */
 .big{
   margin:10px 0;
   line-height:.95;
   font-weight:700;
   color:var(--red);
   letter-spacing:-0.02em;
-  text-align:center;
 
+  /* ВАЖНО: НЕ центрируем */
+  text-align:left;
+
+  /* уменьшено */
   font-size:clamp(48px, 13vw, 88px);
 }
 
@@ -230,6 +239,7 @@ body{ overflow:hidden; }
   height:8px;
   border-radius:50%;
   background:var(--muted);
+  cursor:pointer;
 }
 
 .dot.active{
@@ -258,6 +268,7 @@ body{ overflow:hidden; }
   background:var(--panel);
   color:var(--text);
   font-weight:700;
+  cursor:pointer;
 }
 
 /* =====================
@@ -269,6 +280,7 @@ body{ overflow:hidden; }
   bottom:calc(16px + env(safe-area-inset-bottom));
   background:var(--panel);
   border:2px solid var(--border);
+  color:var(--text);
   padding:10px 12px;
   border-radius:14px;
   font-size:13px;
@@ -282,8 +294,10 @@ body{ overflow:hidden; }
    MOBILE OVERRIDES
 ===================== */
 @media (max-width:768px){
+  /* dots убираем */
   .dots{ display:none; }
 
+  /* стрелки по центру */
   .controls{
     left:50%;
     right:auto;
@@ -305,10 +319,11 @@ body.is-loading .app{
 #loader{
   position:fixed;
   inset:0;
-  z-index:99999;
+  z-index:2147483647;
   display:grid;
   place-items:center;
   background:rgba(255,255,255,.55);
+  -webkit-backdrop-filter:blur(10px);
   backdrop-filter:blur(10px);
 }
 
@@ -326,47 +341,31 @@ body.is-loading .app{
   gap:14px;
 }
 
+#loaderPercent,
+#loaderText{
+  width:100%;
+}
+
 #loaderPercent::before{
   content:"0%";
+  display:block;
   font-size:44px;
   font-weight:800;
+  margin-bottom:10px;
   color:var(--red);
   animation:percentSteps6 6s linear forwards, percentFade6 6s linear forwards;
 }
 
 #loaderText::before{
   content:"Готовлю магию…";
+  display:block;
   font-size:16px;
   font-weight:700;
   color:#1d5540;
   animation:textSteps6 6s linear forwards, textFade6 6s linear forwards;
 }
 
-/* loader ring */
-.loader-ring{
-  width:52px;
-  height:52px;
-  border-radius:50%;
-  border:4px solid rgba(29,85,64,.35);
-  border-top-color:var(--red);
-  animation:loaderSpin .9s linear infinite;
-}
-
-@keyframes loaderSpin{
-  to{ transform:rotate(360deg); }
-}
-
-body.is-loading #loaderCard{
-  animation:loaderPulse 1.6s ease-in-out infinite;
-}
-
-@keyframes loaderPulse{
-  0%{ transform:scale(1); }
-  50%{ transform:scale(1.035); }
-  100%{ transform:scale(1); }
-}
-
-/* percent / text animations */
+/* проценты */
 @keyframes percentSteps6{
   0%{content:"0%";}
   10%{content:"10%";}
@@ -377,6 +376,7 @@ body.is-loading #loaderCard{
   100%{content:"100%";}
 }
 
+/* тексты */
 @keyframes textSteps6{
   0%{content:"Готовлю магию…";}
   10%{content:"Вау, сейчас что-то будет";}
@@ -397,13 +397,39 @@ body.is-loading #loaderCard{
 @keyframes textFade6{
   0%{opacity:0;}
   8%{opacity:1;}
-  22%{opacity:1;}
-  30%{opacity:.2;}
-  48%{opacity:1;}
-  56%{opacity:.2;}
-  72%{opacity:1;}
-  82%{opacity:.2;}
-  92%{opacity:1;}
-  98%{opacity:.2;}
+  22%{opacity:1;} 30%{opacity:.2;}
+  48%{opacity:1;} 56%{opacity:.2;}
+  72%{opacity:1;} 82%{opacity:.2;}
+  92%{opacity:1;} 98%{opacity:.2;}
   100%{opacity:0;}
+}
+
+/* loader ring */
+.loader-ring{
+  display:block;
+  width:52px;
+  height:52px;
+
+  border-radius:50%;
+  border:4px solid rgba(29,85,64,.35);
+  border-top-color:var(--red);
+
+  will-change:transform;
+  animation:loaderSpin .9s linear infinite;
+}
+
+@keyframes loaderSpin{
+  to{ transform:rotate(360deg); }
+}
+
+/* loader pulse */
+body.is-loading #loaderCard{
+  animation:loaderPulse 1.6s ease-in-out infinite;
+  transform-origin:center;
+}
+
+@keyframes loaderPulse{
+  0%{ transform:scale(1); }
+  50%{ transform:scale(1.035); }
+  100%{ transform:scale(1); }
 }
