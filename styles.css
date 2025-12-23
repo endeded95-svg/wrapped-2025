@@ -13,11 +13,11 @@
   --muted:#dba3ab;
 }
 
+*{ box-sizing:border-box; }
+
 /* =====================
    BASE
 ===================== */
-*{ box-sizing:border-box; }
-
 html,body{
   margin:0;
   height:100%;
@@ -27,7 +27,9 @@ html,body{
   -webkit-text-size-adjust:100%;
 }
 
-body{ overflow:hidden; }
+body{
+  overflow:hidden;
+}
 
 /* =====================
    APP + BACKGROUND
@@ -36,6 +38,7 @@ body{ overflow:hidden; }
   position:relative;
   height:100vh;
   height:100dvh;
+  overflow:hidden;
 
   background-color:var(--bg);
   background-image:url("./Pat_1.svg");
@@ -46,9 +49,15 @@ body{ overflow:hidden; }
   animation:bgScroll 18s linear infinite;
 }
 
+/* бесконечный тайл — смещение на высоту тайла */
 @keyframes bgScroll{
   from{ background-position:0 0; }
   to{   background-position:0 -220px; }
+}
+
+/* вертикальные жесты — ок, горизонтальные обрабатывает JS */
+.app, .track{
+  touch-action: pan-y;
 }
 
 /* =====================
@@ -79,7 +88,7 @@ body{ overflow:hidden; }
 }
 
 /* =====================
-   STORY PROGRESS (НЕ МЕНЯЕМ ДИЗАЙН)
+   STORY PROGRESS
 ===================== */
 .progress{
   position:absolute;
@@ -96,14 +105,16 @@ body{ overflow:hidden; }
 }
 
 .seg{
-  /* iOS FIX: равная длина сегментов без артефактов */
-  flex:1 1 0;
-  min-width:0;
-
+  flex:1;
   height:4px;
   background:var(--muted);
   border-radius:999px;
   overflow:hidden;
+  border:0;
+  padding:0;
+  cursor:pointer;
+  appearance:none;
+  -webkit-appearance:none;
 }
 
 .seg .fill{
@@ -113,7 +124,6 @@ body{ overflow:hidden; }
   transform-origin:left;
   transform:scaleX(0);
   transition:transform .25s ease;
-  will-change:transform;
 }
 
 /* =====================
@@ -189,25 +199,17 @@ body{ overflow:hidden; }
   font-size:clamp(26px, 6vw, 48px);
 }
 
-/* ✅ ЦИФРЫ МЕНЬШЕ (ВАРИАНТ 2) + НЕ ПО ЦЕНТРУ */
 .big{
   margin:10px 0;
   line-height:.95;
   font-weight:700;
   color:var(--red);
+  font-size:clamp(64px, 18vw, 120px);
   letter-spacing:-0.02em;
-
-  /* ВАЖНО: НЕ центрируем */
-  text-align:left;
-
-  /* уменьшено */
-  font-size:clamp(48px, 13vw, 88px);
 }
 
 @media (max-width:768px){
-  .big{
-    font-size:clamp(40px, 12vw, 74px);
-  }
+  .big{ font-size:clamp(56px, 20vw, 96px); }
 }
 
 .desc{
@@ -240,6 +242,11 @@ body{ overflow:hidden; }
   border-radius:50%;
   background:var(--muted);
   cursor:pointer;
+
+  border:0;
+  padding:0;
+  appearance:none;
+  -webkit-appearance:none;
 }
 
 .dot.active{
@@ -271,6 +278,11 @@ body{ overflow:hidden; }
   cursor:pointer;
 }
 
+.btn:disabled{
+  opacity:.45;
+  cursor:default;
+}
+
 /* =====================
    HINT
 ===================== */
@@ -294,10 +306,8 @@ body{ overflow:hidden; }
    MOBILE OVERRIDES
 ===================== */
 @media (max-width:768px){
-  /* dots убираем */
   .dots{ display:none; }
 
-  /* стрелки по центру */
   .controls{
     left:50%;
     right:auto;
@@ -397,10 +407,14 @@ body.is-loading .app{
 @keyframes textFade6{
   0%{opacity:0;}
   8%{opacity:1;}
-  22%{opacity:1;} 30%{opacity:.2;}
-  48%{opacity:1;} 56%{opacity:.2;}
-  72%{opacity:1;} 82%{opacity:.2;}
-  92%{opacity:1;} 98%{opacity:.2;}
+  22%{opacity:1;}
+  30%{opacity:.2;}
+  48%{opacity:1;}
+  56%{opacity:.2;}
+  72%{opacity:1;}
+  82%{opacity:.2;}
+  92%{opacity:1;}
+  98%{opacity:.2;}
   100%{opacity:0;}
 }
 
@@ -409,22 +423,24 @@ body.is-loading .app{
   display:block;
   width:52px;
   height:52px;
+  margin:6px 0 0;
 
   border-radius:50%;
   border:4px solid rgba(29,85,64,.35);
-  border-top-color:var(--red);
+  border-top-color: var(--red);
 
-  will-change:transform;
-  animation:loaderSpin .9s linear infinite;
+  will-change: transform;
+  animation: loaderSpin .9s linear infinite;
 }
 
 @keyframes loaderSpin{
-  to{ transform:rotate(360deg); }
+  from{ transform: translateZ(0) rotate(0deg); }
+  to{   transform: translateZ(0) rotate(360deg); }
 }
 
 /* loader pulse */
 body.is-loading #loaderCard{
-  animation:loaderPulse 1.6s ease-in-out infinite;
+  animation: loaderPulse 1.6s ease-in-out infinite;
   transform-origin:center;
 }
 
@@ -432,4 +448,51 @@ body.is-loading #loaderCard{
   0%{ transform:scale(1); }
   50%{ transform:scale(1.035); }
   100%{ transform:scale(1); }
+}
+/* ===== PROGRESS MOBILE FIX: без "зазоров" и разной длины ===== */
+.progress{
+  display:flex;
+  gap:0 !important;                 /* убираем дробные gap */
+  padding:10px 12px;
+  align-items:center;
+}
+
+.seg{
+  flex:1 1 0;
+  min-width:0;
+  height:6px;
+  border-radius:0;                  /* склеиваем, скруглим только края контейнера */
+  border:0;
+  padding:0;
+  margin:0;
+  overflow:hidden;
+
+  /* цвет фона сегмента */
+  background:var(--muted);
+
+  /* разделители вместо gap */
+  border-left:8px solid transparent; /* "разрыв" одинаковый */
+  background-clip:padding-box;
+
+  appearance:none;
+  -webkit-appearance:none;
+}
+
+/* убираем разделитель у первого */
+.seg:first-child{
+  border-left:0;
+}
+
+/* скругляем только крайние сегменты */
+.seg:first-child{ border-top-left-radius:999px; border-bottom-left-radius:999px; }
+.seg:last-child{  border-top-right-radius:999px; border-bottom-right-radius:999px; }
+
+.seg .fill{
+  width:100%;
+  height:100%;
+  background:var(--text);
+  transform-origin:left center;
+  transform:scaleX(0);
+  transition:transform .22s linear;
+  will-change:transform;
 }
