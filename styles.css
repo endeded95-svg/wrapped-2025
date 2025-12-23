@@ -272,12 +272,10 @@ body{ overflow:hidden; }
   .slide{
     pa
 }
-  #loader ~ .app{
+body.is-loading .app{
   filter: blur(10px);
-  animation: appUnblur6 6s ease forwards;
 }
 
-/* Оверлей */
 #loader{
   position: fixed;
   inset: 0;
@@ -288,21 +286,17 @@ body{ overflow:hidden; }
   background: rgba(255,255,255,.55);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-
-  animation: loaderHide6 6s ease forwards;
 }
 
 #loaderCard{
   width: min(520px, calc(100% - 32px));
   padding: 22px 18px;
   text-align: center;
-
   background: rgba(255,255,255,.85);
   border: 2px solid var(--border, #f2cecb);
   border-radius: 22px;
 }
 
-/* Проценты */
 #loaderPercent::before{
   content: "0%";
   display: block;
@@ -311,99 +305,51 @@ body{ overflow:hidden; }
   line-height: 1;
   margin-bottom: 10px;
   color: var(--red, #e33025);
-
-  animation:
-    percentSteps6 6s linear forwards,
-    percentFade6 6s linear forwards;
+  animation: percentSteps6 6s linear forwards, percentFade6 6s linear forwards;
 }
 
-/* Текст */
 #loaderText::before{
   content: "Готовлю магию…";
   display: block;
   font-size: 16px;
   font-weight: 700;
   color: #1d5540;
-
-  animation:
-    textSteps6 6s linear forwards,
-    textFade6 6s linear forwards;
+  animation: textSteps6 6s linear forwards, textFade6 6s linear forwards;
 }
 
-/* Проценты по этапам */
 @keyframes percentSteps6{
-  0%   { content:"0%"; }
-  10%  { content:"10%"; }
-  30%  { content:"30%"; }
-  66%  { content:"66%"; }
-  90%  { content:"90%"; }
-  99%  { content:"99%"; }
-  100% { content:"100%"; }
+  0%{content:"0%";}
+  10%{content:"10%";}
+  30%{content:"30%";}
+  66%{content:"66%";}
+  90%{content:"90%";}
+  99%{content:"99%";}
+  100%{content:"100%";}
 }
 
-/* Тексты по этапам */
 @keyframes textSteps6{
-  0%   { content:"Готовлю магию…"; }
-  10%  { content:"Вау, сейчас что-то будет"; }
-  30%  { content:"Начинаю считать"; }
-  66%  { content:"Столько всего было"; }
-  90%  { content:"Последние приготовления"; }
-  99%  { content:"Посмотрим, что получилось"; }
-  100% { content:"Готово!"; }
+  0%{content:"Готовлю магию…";}
+  10%{content:"Вау, сейчас что-то будет";}
+  30%{content:"Начинаю считать";}
+  66%{content:"Столько всего было";}
+  90%{content:"Последние приготовления";}
+  99%{content:"Посмотрим, что получилось";}
+  100%{content:"Готово!";}
 }
 
-/* Fade процентов */
 @keyframes percentFade6{
-  0%   { opacity: 0; }
-  6%   { opacity: 1; }
-  92%  { opacity: 1; }
-  100% { opacity: 0; }
+  0%{opacity:0;}
+  6%{opacity:1;}
+  92%{opacity:1;}
+  100%{opacity:0;}
 }
 
-/* Fade текста (мягко затухает перед сменой) */
 @keyframes textFade6{
-  0%   { opacity: 0; }
-  8%   { opacity: 1; }
-
-  22%  { opacity: 1; }
-  30%  { opacity: .2; }
-
-  48%  { opacity: 1; }
-  56%  { opacity: .2; }
-
-  72%  { opacity: 1; }
-  82%  { opacity: .2; }
-
-  92%  { opacity: 1; }
-  98%  { opacity: .2; }
-
-  100% { opacity: 0; }
+  0%{opacity:0;}
+  8%{opacity:1;}
+  22%{opacity:1;} 30%{opacity:.2;}
+  48%{opacity:1;} 56%{opacity:.2;}
+  72%{opacity:1;} 82%{opacity:.2;}
+  92%{opacity:1;} 98%{opacity:.2;}
+  100%{opacity:0;}
 }
-
-/* Убираем лоадер */
-@keyframes loaderHide6{
-  0%   { opacity: 1; visibility: visible; pointer-events: auto; }
-  92%  { opacity: 1; }
-  100% { opacity: 0; visibility: hidden; pointer-events: none; }
-}
-
-/* Снимаем blur с приложения */
-@keyframes appUnblur6{
-  0%   { filter: blur(10px); }
-  92%  { filter: blur(10px); }
-  100% { filter: blur(0); }
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce){
-  #loader, #loaderPercent::before, #loaderText::before, #loader ~ .app{
-    animation: none !important;
-    filter: none !important;
-  }
-  #loader{
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
-}
-
