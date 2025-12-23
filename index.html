@@ -278,5 +278,15 @@
     document.body.classList.remove("is-loading");
   }, 6000);
 </script>
+  <script>
+  document.body.classList.add("is-loading");
+
+  setTimeout(() => {
+    const loader = document.getElementById("loader");
+    if (loader) loader.remove();              // УДАЛЯЕМ оверлей полностью
+    document.body.classList.remove("is-loading"); // снимаем blur
+  }, 6000);
+</script>
+
 </body>
 </html>
