@@ -269,19 +269,6 @@
 })();
 </script>
 <script>
-  // PRELOADER: надежно показывает оверлей и на desktop, и на mobile
-  document.body.classList.add("is-loading");
-
-  // даем браузеру 1 кадр на отрисовку loader (важно для desktop)
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      const loader = document.getElementById("loader");
-      if (loader) loader.remove();
-      document.body.classList.remove("is-loading");
-    }, 6000);
-  });
-</script>
-  <script>
   document.body.classList.add("is-loading");
 
   requestAnimationFrame(() => {
@@ -290,25 +277,37 @@
       if (loader) loader.remove();
       document.body.classList.remove("is-loading");
 
-      // 🎉 CONFETTI START
+      // 🎉 запускаем конфетти сразу после прелоадера
       launchConfetti();
     }, 6000);
   });
 
   function launchConfetti(){
     const wrap = document.getElementById("confetti");
+    if (!wrap) return; // если забыли добавить <div id="confetti"></div>
+
     const colors = ["#e33025","#e05188","#f2cecb"];
+    const pieces = 120;
 
-    for(let i=0;i<80;i++){
-      const c = document.createElement("div");
-      c.className = "confetti";
-      c.style.left = Math.random()*100 + "vw";
-      c.style.background = colors[Math.floor(Math.random()*colors.length)];
-      c.style.animationDuration = 2 + Math.random()*2 + "s";
-      c.style.transform = `rotate(${Math.random()*360}deg)`;
-      wrap.appendChild(c);
+    for (let i = 0; i < pieces; i++){
+      const el = document.createElement("div");
+      el.className = "confetti";
+      el.style.left = (Math.random() * 100) + "vw";
+      el.style.backgroundColor = colors[(Math.random() * colors.length) | 0];
 
-      setTimeout(() => c.remove(), 4000);
+      const dur = 2.5 + Math.random() * 2.0;   // 2.5–4.5s
+      const delay = Math.random() * 0.2;       // небольшая рассинхронизация
+      el.style.animationDuration = dur + "s";
+      el.style.animationDelay = delay + "s";
+
+      const rot = Math.random() * 360;
+      const drift = (Math.random() * 160 - 80); // влево/вправо
+      el.style.transform = `translateX(${drift}px) rotate(${rot}deg)`;
+
+      wrap.appendChild(el);
+
+      // убрать элемент после завершения
+      setTimeout(() => el.remove(), (dur + delay) * 1000 + 200);
     }
   }
 </script>
