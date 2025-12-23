@@ -1,3 +1,6 @@
+/* =====================
+   VARIABLES
+===================== */
 :root{
   --bg:#1d5540;
   --red:#e33025;
@@ -12,6 +15,9 @@
 
 *{ box-sizing:border-box; }
 
+/* =====================
+   BASE
+===================== */
 html,body{
   margin:0;
   height:100%;
@@ -21,9 +27,13 @@ html,body{
   -webkit-text-size-adjust:100%;
 }
 
-body{ overflow:hidden; }
+body{
+  overflow:hidden;
+}
 
-/* APP: стабильная высота на iPhone + SVG фон */
+/* =====================
+   APP + BACKGROUND
+===================== */
 .app{
   position:relative;
   height:100vh;
@@ -35,16 +45,17 @@ body{ overflow:hidden; }
   background-position:0 0;
   background-size:220px 220px;
 
-  touch-action:none;
-    animation: bgScroll 18s linear infinite;
+  animation:bgScroll 18s linear infinite;
 }
 
 @keyframes bgScroll{
-  from { background-position: 0 0; }
-  to   { background-position: 0 -288px; } /* важно: = высоте тайла из viewBox */
+  from { background-position:0 0; }
+  to   { background-position:0 -288px; }
 }
 
-/* Верхний story progress */
+/* =====================
+   STORY PROGRESS
+===================== */
 .progress{
   position:absolute;
   left:16px;
@@ -76,14 +87,16 @@ body{ overflow:hidden; }
   transition:transform .25s ease;
 }
 
-/* Трек со слайдами */
+/* =====================
+   TRACK / SLIDES
+===================== */
 .track{
   display:flex;
   height:100%;
   will-change:transform;
   transition:transform .6s cubic-bezier(.18,.95,.22,1);
-  touch-action:none;
 }
+
 .track.no-anim{ transition:none; }
 
 .slide{
@@ -91,14 +104,15 @@ body{ overflow:hidden; }
   display:flex;
   justify-content:center;
   align-items:center;
-
   padding:
     calc(64px + env(safe-area-inset-top))
     clamp(14px, 4vw, 48px)
     calc(120px + env(safe-area-inset-bottom));
 }
 
-/* Карточка */
+/* =====================
+   CARD
+===================== */
 .card{
   width:min(980px, 100%);
   background:var(--card);
@@ -107,18 +121,20 @@ body{ overflow:hidden; }
   padding:clamp(18px, 4vw, 44px);
 }
 
-/* Появление контента */
 .card-inner{
   opacity:0;
   transform:translateY(10px);
   transition:opacity .25s ease, transform .35s ease;
 }
+
 .slide.active .card-inner{
   opacity:1;
   transform:none;
 }
 
-/* Текст */
+/* =====================
+   TEXT
+===================== */
 .meta{
   display:flex;
   justify-content:space-between;
@@ -159,7 +175,9 @@ body{ overflow:hidden; }
   font-size:clamp(15px, 4.2vw, 20px);
 }
 
-/* Нижние точки (по умолчанию на десктопе оставим) */
+/* =====================
+   DOTS (DESKTOP)
+===================== */
 .dots{
   position:absolute;
   left:50%;
@@ -181,12 +199,15 @@ body{ overflow:hidden; }
   background:var(--muted);
   cursor:pointer;
 }
+
 .dot.active{
   background:var(--pink);
   transform:scale(1.4);
 }
 
-/* Стрелки */
+/* =====================
+   CONTROLS
+===================== */
 .controls{
   position:absolute;
   right:16px;
@@ -208,7 +229,9 @@ body{ overflow:hidden; }
   cursor:pointer;
 }
 
-/* Хинт прячем на мобилке */
+/* =====================
+   HINT
+===================== */
 .hint{
   position:absolute;
   left:16px;
@@ -220,103 +243,80 @@ body{ overflow:hidden; }
   border-radius:14px;
   font-size:13px;
 }
+
 @media (max-width:520px){
   .hint{ display:none; }
 }
 
-/* =========================
-   MOBILE: убираем dots, стрелки снизу по центру
-========================= */
-@media (max-width: 768px){
+/* =====================
+   MOBILE OVERRIDES
+===================== */
+@media (max-width:768px){
 
-  /* dots полностью убираем */
-  .dots{ display:none; }
+  /* убрать точки */
+  .dots{
+    display:none;
+  }
 
-  /* стрелки по центру снизу */
+  /* стрелки по центру */
   .controls{
     left:50%;
     right:auto;
     transform:translateX(-50%);
-    bottom:calc(16px + env(safe-area-inset-bottom));
   }
 
-  /* чуть больше места под стрелки */
   .slide{
     padding-bottom:calc(104px + env(safe-area-inset-bottom));
   }
 }
-/* === MOBILE OVERRIDES (FINAL) === */
-@media (max-width: 768px){
 
-  /* 1) УБРАТЬ ТОЧКИ НА МОБИЛКЕ НАВСЕГДА */
-  #dots,
-  .dots{
-    display:none !important;
-    visibility:hidden !important;
-    pointer-events:none !important;
-  }
-
-  /* 2) СТРЕЛКИ СНИЗУ ПО ЦЕНТРУ */
-  .controls{
-    position:absolute !important;
-    left:50% !important;
-    right:auto !important;
-    bottom:calc(16px + env(safe-area-inset-bottom)) !important;
-    transform:translateX(-50%) !important;
-    display:flex !important;
-    gap:12px !important;
-    z-index:9999 !important;
-  }
-
-  /* 3) ЧУТЬ БОЛЬШЕ МЕСТА СНИЗУ ПОД СТРЕЛКИ */
-  .slide{
-    pa
-}
+/* =====================
+   PRELOADER
+===================== */
 body.is-loading .app{
-  filter: blur(10px);
+  filter:blur(10px);
 }
 
 #loader{
-  position: fixed;
-  inset: 0;
-  z-index: 2147483647;
-  display: grid;
-  place-items: center;
-
-  background: rgba(255,255,255,.55);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  position:fixed;
+  inset:0;
+  z-index:2147483647;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.55);
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
 }
 
 #loaderCard{
-  width: min(520px, calc(100% - 32px));
-  padding: 22px 18px;
-  text-align: center;
-  background: rgba(255,255,255,.85);
-  border: 2px solid var(--border, #f2cecb);
-  border-radius: 22px;
+  width:min(520px, calc(100% - 32px));
+  padding:22px 18px;
+  text-align:center;
+  background:rgba(255,255,255,.85);
+  border:2px solid var(--border);
+  border-radius:22px;
 }
 
 #loaderPercent::before{
-  content: "0%";
-  display: block;
-  font-size: 44px;
-  font-weight: 800;
-  line-height: 1;
-  margin-bottom: 10px;
-  color: var(--red, #e33025);
-  animation: percentSteps6 6s linear forwards, percentFade6 6s linear forwards;
+  content:"0%";
+  display:block;
+  font-size:44px;
+  font-weight:800;
+  margin-bottom:10px;
+  color:var(--red);
+  animation:percentSteps6 6s linear forwards, percentFade6 6s linear forwards;
 }
 
 #loaderText::before{
-  content: "Готовлю магию…";
-  display: block;
-  font-size: 16px;
-  font-weight: 700;
-  color: #1d5540;
-  animation: textSteps6 6s linear forwards, textFade6 6s linear forwards;
+  content:"Готовлю магию…";
+  display:block;
+  font-size:16px;
+  font-weight:700;
+  color:#1d5540;
+  animation:textSteps6 6s linear forwards, textFade6 6s linear forwards;
 }
 
+/* loader animations */
 @keyframes percentSteps6{
   0%{content:"0%";}
   10%{content:"10%";}
