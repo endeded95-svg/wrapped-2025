@@ -13,10 +13,6 @@
     <div id="loaderText"></div>
   </div>
 </div>
-
-<div class="app">
-  <!-- твой сайт как есть -->
-</div>
 <div class="app">
   <div class="progress" id="progress" aria-hidden="true"></div>
 
@@ -273,6 +269,14 @@
   requestAnimationFrame(() => go(0, { animate: false }));
 })();
 </script>
+<script>
+  document.body.classList.add("is-loading");
 
+  setTimeout(() => {
+    const loader = document.getElementById("loader");
+    if (loader) loader.remove();
+    document.body.classList.remove("is-loading");
+  }, 6000);
+</script>
 </body>
 </html>
