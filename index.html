@@ -56,6 +56,7 @@
 
   let index = 0;
 
+  // ===== Render slides =====
   slides.forEach((s, i) => {
     const slide = document.createElement("section");
     slide.className = "slide";
@@ -80,6 +81,7 @@
     dots.appendChild(dot);
   });
 
+  // ===== Progress segments =====
   const segs = [];
   slides.forEach((_, i) => {
     const seg = document.createElement("div");
@@ -128,8 +130,8 @@
     const f = Math.max(-1, Math.min(1, dragX / w));
     const cur = segs[index]?.querySelector(".fill");
     const next = segs[index + 1]?.querySelector(".fill");
-    const prev = segs[index - 1]?.querySelector(".fill");
 
+    // base state
     segs.forEach((seg, j) => {
       const fill = seg.querySelector(".fill");
       if (j < index) fill.style.transform = "scaleX(1)";
@@ -137,13 +139,11 @@
       else fill.style.transform = "scaleX(1)";
     });
 
+    // only visualizing swipe LEFT towards next
     if (f < 0 && next && cur){
       const t = Math.min(1, Math.max(0, -f));
       cur.style.transform = `scaleX(${1 - t})`;
       next.style.transform = `scaleX(${t})`;
-    } else if (f > 0 && prev && cur){
-      const t = Math.min(1, Math.max(0, f));
-      cur.style.transform = `scaleX(${1 - t})`;
     }
   }
 
@@ -151,11 +151,11 @@
     const prevIndex = index;
     index = Math.max(0, Math.min(slides.length - 1, i));
     const dir = index > prevIndex ? "from-right" : "from-left";
-
     setTrackPx(baseXForIndex(index), animate);
     setActiveUI(dir);
   }
 
+  // ===== Controls (both directions) =====
   document.getElementById("next").addEventListener("click", () => go(index + 1, { animate: true }));
   document.getElementById("prev").addEventListener("click", () => go(index - 1, { animate: true }));
 
@@ -164,42 +164,85 @@
     if (e.key === "ArrowLeft") go(index - 1, { animate: true });
   });
 
+  // ===== Swipe: ONLY LEFT (forward). Vertical gestures ignored. =====
   let isDragging = false;
   let startX = 0;
+  let startY = 0;
   let startBase = 0;
+
   let lastX = 0;
   let lastT = 0;
   let vx = 0;
+
   let activePointerId = null;
+  let axis = null; // "x" | "y" | null
+  const AXIS_LOCK_PX = 8;
 
   function clampX(x){
     const min = baseXForIndex(slides.length - 1);
     const max = baseXForIndex(0);
+    // rubber band
     if (x < min) return min + (x - min) * 0.25;
     if (x > max) return max + (x - max) * 0.25;
     return x;
   }
 
-  function onDown(clientX, pointerId){
-    if (activePointerId !== null) return;
-    activePointerId = pointerId ?? "touch";
-    isDragging = true;
+  function cancelDragSnapBack(){
+    isDragging = false;
+    axis = null;
+    activePointerId = null;
+    track.classList.remove("no-anim");
+    setTrackPx(baseXForIndex(index), true);
+    setActiveUI("from-right");
+  }
 
-    startX = clientX;
+  function onDown(e){
+    if (activePointerId !== null) return;
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+
+    activePointerId = e.pointerId ?? "touch";
+    isDragging = true;
+    axis = null;
+
+    startX = e.clientX;
+    startY = e.clientY;
     startBase = baseXForIndex(index);
 
-    lastX = clientX;
+    lastX = e.clientX;
     lastT = performance.now();
     vx = 0;
 
     track.classList.add("no-anim");
   }
 
-  function onMove(clientX){
+  function onMove(e){
     if (!isDragging) return;
+    if (activePointerId !== e.pointerId) return;
+
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+
+    // pick axis after small threshold
+    if (!axis){
+      if (Math.abs(dx) < AXIS_LOCK_PX && Math.abs(dy) < AXIS_LOCK_PX) return;
+      axis = Math.abs(dx) >= Math.abs(dy) ? "x" : "y";
+      if (axis === "y"){
+        // vertical gesture: do nothing, allow page gesture
+        cancelDragSnapBack();
+        return;
+      }
+    }
+
+    // If horizontal, but it's swipe RIGHT (dx > 0): ignore + snap back
+    if (dx > 0){
+      cancelDragSnapBack();
+      return;
+    }
+
+    // horizontal LEFT: prevent default and move track
+    e.preventDefault();
 
     const now = performance.now();
-    const dx = clientX - startX;
     const target = clampX(startBase + dx);
 
     setTrackPx(target, false);
@@ -207,29 +250,35 @@
 
     const dt = now - lastT;
     if (dt > 0){
-      const v = (clientX - lastX) / dt;
+      const v = (e.clientX - lastX) / dt;
       vx = vx * 0.75 + v * 0.25;
-      lastX = clientX;
+      lastX = e.clientX;
       lastT = now;
     }
   }
 
-  function onUp(clientX){
+  function onUp(e){
     if (!isDragging) return;
+    if (activePointerId !== e.pointerId) return;
+
     isDragging = false;
 
     const w = slideWidth();
-    const dx = clientX - startX;
+    const dx = e.clientX - startX;
 
     const velocityThreshold = 0.6;
     const distanceThreshold = w * 0.18;
 
     let targetIndex = index;
 
-    if (Math.abs(vx) > velocityThreshold){
-      targetIndex = vx > 0 ? index - 1 : index + 1;
-    } else if (Math.abs(dx) > distanceThreshold){
-      targetIndex = dx > 0 ? index - 1 : index + 1;
+    // ONLY LEFT
+    const swipeLeftByVelocity = (vx < -velocityThreshold);
+    const swipeLeftByDistance = (dx < -distanceThreshold);
+
+    if (swipeLeftByVelocity || swipeLeftByDistance){
+      targetIndex = index + 1;
+    } else {
+      targetIndex = index;
     }
 
     targetIndex = Math.max(0, Math.min(slides.length - 1, targetIndex));
@@ -237,33 +286,17 @@
     track.classList.remove("no-anim");
     go(targetIndex, { animate: true });
 
+    axis = null;
     activePointerId = null;
   }
 
-  // На десктопе лучше не passive, чтобы избежать выделения/драг-эффектов
-  window.addEventListener("pointerdown", (e) => {
-    if (e.pointerType === "mouse" && e.button !== 0) return;
-    e.preventDefault();
-    onDown(e.clientX, e.pointerId);
-  }, { passive: false });
-
-  window.addEventListener("pointermove", (e) => {
-    if (activePointerId !== e.pointerId) return;
-    e.preventDefault();
-    onMove(e.clientX);
-  }, { passive: false });
-
-  window.addEventListener("pointerup", (e) => {
-    if (activePointerId !== e.pointerId) return;
-    e.preventDefault();
-    onUp(e.clientX);
-  }, { passive: false });
-
-  window.addEventListener("pointercancel", (e) => {
-    if (activePointerId !== e.pointerId) return;
-    e.preventDefault();
-    onUp(e.clientX);
-  }, { passive: false });
+  // pointer events:
+  // - down/up can be passive
+  // - move must be passive:false to allow preventDefault ONLY on horizontal-left
+  window.addEventListener("pointerdown", onDown, { passive: true });
+  window.addEventListener("pointermove", onMove, { passive: false });
+  window.addEventListener("pointerup", onUp, { passive: true });
+  window.addEventListener("pointercancel", onUp, { passive: true });
 
   window.addEventListener("resize", () => {
     setTrackPx(baseXForIndex(index), false);
@@ -274,7 +307,9 @@
   requestAnimationFrame(() => go(0, { animate: false }));
 })();
 </script>
+
 <script>
+  // PRELOADER (6s) + CONFETTI
   document.body.classList.add("is-loading");
 
   requestAnimationFrame(() => {
@@ -282,18 +317,16 @@
       const loader = document.getElementById("loader");
       if (loader) loader.remove();
       document.body.classList.remove("is-loading");
-
-      // 🎉 запускаем конфетти сразу после прелоадера
       launchConfetti();
     }, 6000);
   });
 
   function launchConfetti(){
     const wrap = document.getElementById("confetti");
-    if (!wrap) return; // если забыли добавить <div id="confetti"></div>
+    if (!wrap) return;
 
     const colors = ["#e33025","#e05188","#f2cecb"];
-    const pieces = 120;
+    const pieces = 200;
 
     for (let i = 0; i < pieces; i++){
       const el = document.createElement("div");
@@ -301,21 +334,20 @@
       el.style.left = (Math.random() * 100) + "vw";
       el.style.backgroundColor = colors[(Math.random() * colors.length) | 0];
 
-      const dur = 2.5 + Math.random() * 2.0;   // 2.5–4.5s
-      const delay = Math.random() * 0.2;       // небольшая рассинхронизация
+      const dur = 2.2 + Math.random() * 2.3;
+      const delay = Math.random() * 0.15;
       el.style.animationDuration = dur + "s";
       el.style.animationDelay = delay + "s";
 
       const rot = Math.random() * 360;
-      const drift = (Math.random() * 160 - 80); // влево/вправо
+      const drift = (Math.random() * 160 - 80);
       el.style.transform = `translateX(${drift}px) rotate(${rot}deg)`;
 
       wrap.appendChild(el);
-
-      // убрать элемент после завершения
       setTimeout(() => el.remove(), (dur + delay) * 1000 + 200);
     }
   }
 </script>
+
 </body>
 </html>
